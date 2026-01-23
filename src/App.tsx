@@ -24,7 +24,7 @@ const router = createBrowserRouter([
 
 export const App: React.FC = () => {
   return (
-    <div className="mx-auto max-w-7xl px-4 pt-6">
+    <div className="mx-auto max-w-5xl px-4 pt-6">
       <RouterProvider router={router} />
     </div>
   );

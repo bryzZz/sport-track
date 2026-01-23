@@ -1,0 +1,52 @@
+import React from "react";
+
+import { ExerciseSetsChart } from "./ExerciseSetsChart";
+
+type PhaseType = "strict" | "cheating";
+
+type ExercisePhase = {
+  reps: number;
+  weight: number;
+  type: PhaseType;
+};
+
+type ExerciseSet = {
+  phases: ExercisePhase[];
+};
+
+type ExerciseRecord = {
+  date: string;
+  done: boolean;
+  sets: ExerciseSet[];
+};
+
+export type ExerciseStats = {
+  id: string;
+  name: string;
+  bestSet: {
+    reps: number;
+    weight: number;
+  };
+  records: ExerciseRecord[];
+};
+
+type ExerciseStatsCardProps = {
+  exercise: ExerciseStats;
+};
+
+export const ExerciseStatsCard: React.FC<ExerciseStatsCardProps> = ({
+  exercise,
+}) => {
+  return (
+    <div className="rounded-xl border p-4">
+      <div className="mb-4 flex flex-col gap-2">
+        <h3 className="text-xl font-semibold">{exercise.name}</h3>
+        <p className="text-sm text-neutral-600">
+          Лучший сет: {exercise.bestSet.reps} × {exercise.bestSet.weight} кг
+        </p>
+      </div>
+
+      <ExerciseSetsChart records={exercise.records} />
+    </div>
+  );
+};
