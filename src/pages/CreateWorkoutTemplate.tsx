@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 
-import { workoutTemplates, type WorkoutTemplate } from "../constants";
+import {
+  exerciseTypes,
+  workoutTemplates,
+  type WorkoutTemplate,
+} from "../constants";
 
 export const CreateWorkoutTemplate: React.FC = () => {
   const [name, setName] = useState(workoutTemplates[0].name);
@@ -40,13 +44,11 @@ export const CreateWorkoutTemplate: React.FC = () => {
             <div key={i} className="w-full rounded border border-zinc-600 p-2">
               <select value={exercise.exerciseId}>
                 <option value="">Select Exercise</option>
-                <option value="1">Shoulder press</option>
-                <option value="2">Dumbbell lateral raises</option>
-                <option value="3">Incline Dumbbell Press</option>
-                <option value="4">Machine Chest Press</option>
-                <option value="5">Pec Fly</option>
-                <option value="6">Close Grip Bench Press</option>
-                <option value="7">Triceps Pushdown (bar)</option>
+                {exerciseTypes.map((type) => (
+                  <option key={type.id} value={type.id}>
+                    {type.name}
+                  </option>
+                ))}
               </select>
 
               <div>
