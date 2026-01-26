@@ -18,6 +18,13 @@ export const ExerciseItem: React.FC<ExerciseItemProps> = (props) => {
   return (
     <div className="w-full rounded border border-zinc-600 p-2">
       <div className="flex flex-wrap items-center gap-2">
+        <button
+          aria-label="Переместить упражнение"
+          className="exercise-drag-handle cursor-grab rounded border px-2 py-1 text-sm active:cursor-grabbing"
+          type="button"
+        >
+          Drag
+        </button>
         <select
           className="min-w-55 flex-1 rounded border border-zinc-600 bg-transparent px-2 py-1"
           {...register(`exercises.${index}.exerciseId`)}
