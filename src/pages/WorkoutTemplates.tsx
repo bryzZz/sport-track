@@ -1,19 +1,15 @@
-import React, { useState } from "react";
+import Fire from "assets/icons/fire.svg?react";
+import { workoutTemplates } from "constants";
+import React from "react";
 import { Link } from "react-router";
 
-import { workoutTemplates } from "../constants";
-
-import Fire from "../assets/icons/fire.svg?react";
-
 export const WorkoutTemplates: React.FC = () => {
-  const [items] = useState(workoutTemplates);
-
   return (
     <div>
       <h1 className="mb-6 text-4xl">Workout Templates</h1>
 
       <div className="flex flex-col items-start gap-2">
-        {items.map((template) => (
+        {workoutTemplates.map((template) => (
           <div
             key={template.id}
             className="flex items-center justify-between gap-6 rounded-lg border px-4 py-2"
@@ -27,12 +23,14 @@ export const WorkoutTemplates: React.FC = () => {
 
             <p>Next Date: {new Date().toLocaleDateString("ru-RU")}</p>
 
-            <button
-              className="cursor-pointer rounded border px-6 py-2"
-              type="button"
-            >
-              Edit
-            </button>
+            <Link to={`/templates/${template.id}/edit`}>
+              <button
+                className="cursor-pointer rounded border px-6 py-2"
+                type="button"
+              >
+                Edit
+              </button>
+            </Link>
 
             <Link to="/stats">
               <button
@@ -45,7 +43,7 @@ export const WorkoutTemplates: React.FC = () => {
           </div>
         ))}
 
-        <Link to="/create">
+        <Link to="/templates/create">
           <button
             className="cursor-pointer rounded border px-6 py-2"
             type="button"

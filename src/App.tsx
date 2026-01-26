@@ -1,11 +1,10 @@
+import { CreateWorkoutTemplate } from "pages/CreateWorkoutTemplate";
+import { EditWorkoutTemplate } from "pages/EditWorkoutTemplate";
+import { WorkoutStats } from "pages/WorkoutStats";
+import { WorkoutTemplates } from "pages/WorkoutTemplates";
 import React from "react";
-
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
-
-import { WorkoutTemplates } from "./pages/WorkoutTemplates";
-import { CreateWorkoutTemplate } from "./pages/CreateWorkoutTemplate";
-import { WorkoutStats } from "./pages/WorkoutStats";
 
 const router = createBrowserRouter([
   {
@@ -13,8 +12,12 @@ const router = createBrowserRouter([
     element: <WorkoutTemplates />,
   },
   {
-    path: "/create",
+    path: "/templates/create",
     element: <CreateWorkoutTemplate />,
+  },
+  {
+    path: "/templates/:id/edit",
+    element: <EditWorkoutTemplate />,
   },
   {
     path: "/stats",

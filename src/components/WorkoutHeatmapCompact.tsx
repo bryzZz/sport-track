@@ -1,7 +1,6 @@
-import React from "react";
+import { workoutData } from "constants";
 import { format, isValid, parseISO } from "date-fns";
-
-import { workoutData } from "../constants";
+import React from "react";
 
 const intensityClasses = [
   "bg-neutral-200/40",

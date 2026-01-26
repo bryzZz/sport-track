@@ -1,3 +1,4 @@
+import { format, parseISO } from "date-fns";
 import React, { useState } from "react";
 import {
   Bar,
@@ -7,7 +8,6 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { format, parseISO } from "date-fns";
 
 type PhaseType = "strict" | "cheating";
 
@@ -71,11 +71,11 @@ export const ExerciseSetsChart: React.FC<ExerciseSetsChartProps> = ({
   }
 
   const sortedRecords = [...records].sort(
-    (a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime()
+    (a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime(),
   );
 
   const doneByDate = new Map(
-    sortedRecords.map((record) => [record.date, record.done])
+    sortedRecords.map((record) => [record.date, record.done]),
   );
 
   const data = sortedRecords.map((record) => {

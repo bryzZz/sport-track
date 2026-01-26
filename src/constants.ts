@@ -8,7 +8,7 @@ export type WorkoutTemplate = {
       phases: {
         reps: number;
         weight: number;
-        type: "strict" | "cheating";
+        type: "strict" | "cheating" | "drop";
       }[];
     }[];
     comment?: string;
@@ -169,4 +169,91 @@ export const exerciseTypes = [
   { id: "23", name: "Становая тяга" },
   { id: "24", name: "Подъем на бицепс в кроссовере (bar)" },
   { id: "25", name: "Гантели на бицепс молот" },
+];
+
+export const phasesTypes = ["strict", "cheating", "drop"] as const;
+
+export const realWorkoutRecords = [
+  {
+    id: "1",
+    performedAt: "2026-01-26T18:32:00+02:00",
+    templateId: "1",
+    rpe: 7,
+    exercises: [
+      {
+        exerciseId: "1",
+        sets: [
+          { phases: [{ reps: 10, weight: 45, type: "strict" }] },
+          { phases: [{ reps: 10, weight: 45, type: "strict" }] },
+          {
+            phases: [
+              { reps: 5, weight: 45, type: "strict" },
+              { reps: 5, weight: 32, type: "drop" },
+            ],
+          },
+        ],
+      },
+      {
+        exerciseId: "2",
+        sets: [
+          {
+            phases: [{ reps: 12, weight: 8, type: "strict" }],
+          },
+          {
+            phases: [{ reps: 12, weight: 8, type: "strict" }],
+          },
+          {
+            phases: [{ reps: 12, weight: 8, type: "strict" }],
+          },
+        ],
+      },
+      {
+        exerciseId: "3",
+        sets: [
+          {
+            phases: [{ reps: 10, weight: 20, type: "strict" }],
+          },
+          {
+            phases: [{ reps: 10, weight: 20, type: "strict" }],
+          },
+          {
+            phases: [{ reps: 10, weight: 16, type: "strict" }],
+          },
+        ],
+      },
+      {
+        exerciseId: "4",
+        sets: [
+          { phases: [{ reps: 10, weight: 30, type: "strict" }] },
+          { phases: [{ reps: 10, weight: 40, type: "strict" }] },
+          { phases: [{ reps: 9, weight: 40, type: "strict" }] },
+        ],
+      },
+      {
+        exerciseId: "5",
+        sets: [
+          { phases: [{ reps: 12, weight: 63, type: "strict" }] },
+          { phases: [{ reps: 12, weight: 63, type: "strict" }] },
+          { phases: [{ reps: 12, weight: 63, type: "strict" }] },
+        ],
+      },
+      {
+        exerciseId: "6",
+        sets: [
+          { phases: [{ reps: 10, weight: 35, type: "strict" }] },
+          { phases: [{ reps: 7, weight: 40, type: "strict" }] },
+          { phases: [{ reps: 7, weight: 40, type: "strict" }] },
+        ],
+      },
+      {
+        exerciseId: "7",
+        sets: [
+          { phases: [{ reps: 10, weight: 50, type: "strict" }] },
+          { phases: [{ reps: 10, weight: 50, type: "strict" }] },
+          { phases: [{ reps: 10, weight: 50, type: "strict" }] },
+          { phases: [{ reps: 10, weight: 45, type: "strict" }] },
+        ],
+      },
+    ],
+  },
 ];
