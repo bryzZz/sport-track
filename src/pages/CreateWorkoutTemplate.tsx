@@ -1,5 +1,6 @@
-import { WorkoutTemplateForm } from "components/WorkoutTemplateForm";
 import React from "react";
+
+import { WorkoutTemplateForm } from "components/WorkoutTemplateForm";
 
 export const CreateWorkoutTemplate: React.FC = () => {
   return (

@@ -1,6 +1,7 @@
-import { phasesTypes } from "constants";
 import React from "react";
 import { useFormContext } from "react-hook-form";
+
+import { phasesTypes } from "constants";
 
 import type { WorkoutTemplateFormFormValues } from "../WorkoutTemplateForm";
 

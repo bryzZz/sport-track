@@ -1,7 +1,8 @@
-import { WorkoutTemplateForm } from "components/WorkoutTemplateForm";
-import { workoutTemplates } from "constants";
 import React from "react";
 import { useParams } from "react-router";
+
+import { WorkoutTemplateForm } from "components/WorkoutTemplateForm";
+import { workoutTemplates } from "constants";
 
 export const EditWorkoutTemplate: React.FC = () => {
   const { id } = useParams<{ id: string }>();

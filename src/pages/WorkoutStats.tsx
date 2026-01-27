@@ -1,7 +1,8 @@
+import React from "react";
+
 import Fire from "assets/icons/fire.svg?react";
 import { ExerciseStatsCard } from "components/ExerciseStatsCard";
 import { WorkoutHeatmapCompact } from "components/WorkoutHeatmapCompact";
-import React from "react";
 
 const recordDates = [
   "2026-01-01",

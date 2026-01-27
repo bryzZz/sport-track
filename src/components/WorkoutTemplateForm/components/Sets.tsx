@@ -2,6 +2,7 @@ import React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 import type { WorkoutTemplateFormFormValues } from "../WorkoutTemplateForm";
+
 import { SetItem } from "./SetItem";
 
 interface SetsProps {

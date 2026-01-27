@@ -1,7 +1,8 @@
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
-import type { WorkoutTemplate } from "../../constants";
+import type { WorkoutTemplate } from "constants";
+
 import { Exercises } from "./components/Exercises";
 
 export type WorkoutTemplateFormFormValues = Omit<WorkoutTemplate, "id">;

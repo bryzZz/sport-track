@@ -1,7 +1,8 @@
-import Fire from "assets/icons/fire.svg?react";
-import { workoutTemplates } from "constants";
 import React from "react";
 import { Link } from "react-router";
+
+import Fire from "assets/icons/fire.svg?react";
+import { workoutTemplates } from "constants";
 
 export const WorkoutTemplates: React.FC = () => {
   return (

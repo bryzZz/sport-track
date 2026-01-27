@@ -3,6 +3,7 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { ReactSortable } from "react-sortablejs";
 
 import type { WorkoutTemplateFormFormValues } from "../WorkoutTemplateForm";
+
 import { ExerciseItem } from "./ExerciseItem";
 
 export const Exercises: React.FC = () => {

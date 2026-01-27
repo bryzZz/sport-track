@@ -1,10 +1,11 @@
+import React from "react";
+import { createBrowserRouter } from "react-router";
+import { RouterProvider } from "react-router/dom";
+
 import { CreateWorkoutTemplate } from "pages/CreateWorkoutTemplate";
 import { EditWorkoutTemplate } from "pages/EditWorkoutTemplate";
 import { WorkoutStats } from "pages/WorkoutStats";
 import { WorkoutTemplates } from "pages/WorkoutTemplates";
-import React from "react";
-import { createBrowserRouter } from "react-router";
-import { RouterProvider } from "react-router/dom";
 
 const router = createBrowserRouter([
   {

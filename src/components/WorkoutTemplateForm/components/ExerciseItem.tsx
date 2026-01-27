@@ -1,8 +1,10 @@
-import { exerciseTypes } from "constants";
 import React from "react";
 import { useFormContext } from "react-hook-form";
 
+import { exerciseTypes } from "constants";
+
 import type { WorkoutTemplateFormFormValues } from "../WorkoutTemplateForm";
+
 import { Sets } from "./Sets";
 
 interface ExerciseItemProps {
