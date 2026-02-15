@@ -45,3 +45,43 @@ MVP проект для отслеживания прогресса в спор�
 - Если стиль можно сделать через tailwind делай через него, во вторую очередь inline стили
 - Один файл - один react компонент
 - Хуки импортируй из react, НЕ нужно делать React.useSmth
+
+## Текущее состояние проекта
+
+- Монорепо структура:
+  - `apps/web` — frontend (Vite + React + TypeScript)
+  - `apps/api` — backend (Fastify + Prisma)
+- База данных: Postgres (Supabase)
+- Prisma schema: `apps/api/prisma/schema.prisma`
+- Seed-данные: `apps/api/prisma/seed.ts`
+
+## Frontend Architecture
+
+- На frontend для серверных данных использовать только **react-query**.
+- Глобальный QueryClient:
+  - `apps/web/src/api/queryClient.ts`
+  - Подключение в `apps/web/src/main.tsx` через `QueryClientProvider`.
+- HTTP-клиент:
+  - `apps/web/src/api/api.ts` (axios instance)
+- Структура API по сущностям (обязательно):
+  - `apps/web/src/api/<entity>/api.ts`
+  - `apps/web/src/api/<entity>/queries.ts`
+  - `apps/web/src/api/<entity>/types.ts`
+  - `apps/web/src/api/<entity>/index.ts`
+- В компонентах и страницах не делать прямых axios-вызовов.
+  Использовать только hooks из `queries.ts`.
+
+## Query rules
+
+- Для каждой сущности использовать стабильные query keys.
+- После успешных mutation делать `invalidateQueries` по связанным ключам.
+- Если есть локальное улучшение UX, допускается `setQueryData` вместе с invalidate.
+
+## Доменные правила (текущие)
+
+- В `WorkoutPerform` редактирование комментария упражнения обновляет **шаблон**:
+  - `PATCH /workout-templates/:templateId/exercises/:templateExerciseId/comment`
+- `weight` из API может приходить строкой (Prisma Decimal).
+  На frontend приводить к `number` в слое маппинга/инициализации формы.
+- Данные для сидов не импортировать из `apps/web/src/constants.ts`.
+  Если нужно использовать те же значения, копировать их в `apps/api/prisma/seed.ts`.
