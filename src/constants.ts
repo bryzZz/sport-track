@@ -29,7 +29,6 @@ export const workoutTemplates: WorkoutTemplate[] = [
           { phases: [{ reps: 12, weight: 45, type: "strict" }] },
           { phases: [{ reps: 12, weight: 45, type: "strict" }] },
         ],
-        comment: "Возможен дроп веса на последних подходах",
       },
 
       // Dumbbell lateral raises (strict + cheating)
@@ -82,7 +81,6 @@ export const workoutTemplates: WorkoutTemplate[] = [
           { phases: [{ reps: 10, weight: 30, type: "strict" }] },
           { phases: [{ reps: 10, weight: 30, type: "strict" }] },
         ],
-        comment: "Попробовать правый тренажёр",
       },
 
       // Pec Fly
@@ -114,6 +112,107 @@ export const workoutTemplates: WorkoutTemplate[] = [
           { phases: [{ reps: 10, weight: 50, type: "strict" }] },
           { phases: [{ reps: 10, weight: 45, type: "strict" }] },
           { phases: [{ reps: 10, weight: 45, type: "strict" }] },
+        ],
+      },
+    ],
+  },
+];
+
+export type WorkoutTemplateNew = {
+  id: string;
+  name: string;
+  streak: number; // Потом уедет
+  exercises: {
+    exerciseId: string;
+    sets: {
+      reps: number;
+      partialReps?: number;
+      weight: number;
+    }[];
+    comment?: string;
+  }[];
+};
+
+type WorkoutTemplateNewExercise = WorkoutTemplateNew["exercises"][number];
+type WorkoutTemplateNewSet = WorkoutTemplateNewExercise["sets"][number];
+
+export type WorkoutPerformExercise = Omit<WorkoutTemplateNewExercise, "sets"> & {
+  sets: (WorkoutTemplateNewSet & {
+    isCompleted: boolean;
+  })[];
+};
+
+export const workoutTemplatesNew: WorkoutTemplateNew[] = [
+  {
+    id: "1",
+    name: "Push A",
+    streak: 19,
+    exercises: [
+      // Shoulder press
+      {
+        exerciseId: "1",
+        sets: [
+          { reps: 12, weight: 45 },
+          { reps: 12, weight: 45 },
+          { reps: 12, weight: 45 },
+        ],
+      },
+      // Dumbbell lateral raises (strict + cheating)
+      {
+        exerciseId: "2",
+        sets: [
+          { reps: 12, partialReps: 4, weight: 7 },
+          { reps: 12, partialReps: 4, weight: 7 },
+          { reps: 12, partialReps: 4, weight: 7 },
+        ],
+      },
+      // Incline Dumbbell Press (heavy + backoff)
+      {
+        exerciseId: "3",
+        sets: [
+          { reps: 6, weight: 20 },
+          { reps: 10, weight: 16 },
+          { reps: 10, weight: 16 },
+        ],
+        comment: "3 высота с конца и 2 высота сидушки снизу",
+      },
+      // Machine Chest Press
+      {
+        exerciseId: "4",
+        sets: [
+          { reps: 10, weight: 30 },
+          { reps: 10, weight: 30 },
+          { reps: 10, weight: 30 },
+        ],
+      },
+      // Pec Fly
+      {
+        exerciseId: "5",
+        sets: [
+          { reps: 12, weight: 63 },
+          { reps: 12, weight: 63 },
+          { reps: 12, weight: 63 },
+        ],
+        comment: "2 уровень растяжения",
+      },
+      // Close Grip Bench Press
+      {
+        exerciseId: "6",
+        sets: [
+          { reps: 10, weight: 35 },
+          { reps: 10, weight: 35 },
+          { reps: 10, weight: 35 },
+        ],
+        comment: "Посмотреть технику",
+      },
+      // Triceps Pushdown (bar)
+      {
+        exerciseId: "7",
+        sets: [
+          { reps: 10, weight: 50 },
+          { reps: 10, weight: 50 },
+          { reps: 10, weight: 45 },
+          { reps: 10, weight: 45 },
         ],
       },
     ],

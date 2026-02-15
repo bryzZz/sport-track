@@ -33,6 +33,15 @@ export const WorkoutTemplates: React.FC = () => {
               </button>
             </Link>
 
+            <Link to={`/workout/perform?templateId=${template.id}`}>
+              <button
+                className="cursor-pointer rounded border px-6 py-2"
+                type="button"
+              >
+                Perform
+              </button>
+            </Link>
+
             <Link to="/stats">
               <button
                 className="cursor-pointer rounded border px-6 py-2"
