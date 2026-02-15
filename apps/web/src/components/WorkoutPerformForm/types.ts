@@ -10,6 +10,7 @@ export type WorkoutPerformSetValues = {
 export type WorkoutPerformExerciseValues = {
   exerciseTypeId: string;
   templateExerciseId: string;
+  comment: string;
   sets: WorkoutPerformSetValues[];
 };
 

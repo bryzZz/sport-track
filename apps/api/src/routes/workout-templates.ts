@@ -1,10 +1,7 @@
 import type { FastifyPluginAsync } from "fastify";
 
 import { prisma } from "../lib/prisma";
-import {
-  createWorkoutTemplateSchema,
-  updateWorkoutTemplateExerciseCommentSchema,
-} from "../modules/workout-templates/schemas";
+import { createWorkoutTemplateSchema } from "../modules/workout-templates/schemas";
 
 export const workoutTemplatesRoutes: FastifyPluginAsync = async (app) => {
   app.get("/", async () => {
@@ -130,48 +127,4 @@ export const workoutTemplatesRoutes: FastifyPluginAsync = async (app) => {
     return reply.status(201).send(template);
   });
 
-  app.patch("/:templateId/exercises/:templateExerciseId/comment", async (request, reply) => {
-    const params = request.params as {
-      templateId: string;
-      templateExerciseId: string;
-    };
-
-    const parsedBody = updateWorkoutTemplateExerciseCommentSchema.safeParse(
-      request.body,
-    );
-
-    if (!parsedBody.success) {
-      return reply.status(400).send({
-        message: "Invalid payload",
-        issues: parsedBody.error.issues,
-      });
-    }
-
-    const exercise = await prisma.workoutTemplateExercise.findUnique({
-      where: {
-        id: params.templateExerciseId,
-      },
-      select: {
-        id: true,
-        templateId: true,
-      },
-    });
-
-    if (!exercise || exercise.templateId !== params.templateId) {
-      return reply.status(404).send({
-        message: "Template exercise not found",
-      });
-    }
-
-    const updatedExercise = await prisma.workoutTemplateExercise.update({
-      where: {
-        id: params.templateExerciseId,
-      },
-      data: {
-        comment: parsedBody.data.comment,
-      },
-    });
-
-    return updatedExercise;
-  });
 };

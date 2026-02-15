@@ -10,11 +10,7 @@ import {
   type CreateWorkoutSessionPayload,
   useCreateWorkoutSession,
 } from "../api/workout-sessions";
-import {
-  useGetWorkoutTemplate,
-  useUpdateWorkoutTemplateExerciseComment,
-  type WorkoutTemplate,
-} from "../api/workout-templates";
+import { useGetWorkoutTemplate, type WorkoutTemplate } from "../api/workout-templates";
 
 const createInitialValues = (
   template: WorkoutTemplate,
@@ -23,6 +19,7 @@ const createInitialValues = (
   exercises: template.exercises.map((exercise) => ({
     exerciseTypeId: exercise.exerciseTypeId,
     templateExerciseId: exercise.id,
+    comment: exercise.comment ?? "",
     sets: exercise.sets.map((set) => ({
       reps: set.reps,
       partialReps: set.partialReps ?? undefined,
@@ -39,8 +36,6 @@ export const WorkoutPerform: React.FC = () => {
     templateId ?? "",
   );
   const { mutateAsync: createWorkoutSession } = useCreateWorkoutSession();
-  const { mutateAsync: updateTemplateExerciseComment } =
-    useUpdateWorkoutTemplateExerciseComment();
 
   if (!templateId) {
     return (
@@ -80,6 +75,8 @@ export const WorkoutPerform: React.FC = () => {
         exerciseTypeId: exercise.exerciseTypeId,
         templateExerciseId: exercise.templateExerciseId,
         orderIndex: exerciseIndex,
+        comment:
+          exercise.comment.trim().length > 0 ? exercise.comment.trim() : null,
         sets: exercise.sets.map((set) => ({
           reps: set.reps,
           partialReps: set.partialReps,
@@ -93,17 +90,6 @@ export const WorkoutPerform: React.FC = () => {
 
     window.alert("Тренировка сохранена.");
     window.history.back();
-  };
-
-  const handleUpdateExerciseComment = async (
-    templateExerciseId: string,
-    comment: string | null,
-  ) => {
-    await updateTemplateExerciseComment({
-      templateId: template.id,
-      templateExerciseId,
-      comment,
-    });
   };
 
   return (
@@ -123,7 +109,6 @@ export const WorkoutPerform: React.FC = () => {
         template={template}
         defaultValues={initialValues}
         onSubmit={handleSubmit}
-        onUpdateExerciseComment={handleUpdateExerciseComment}
       />
     </div>
   );

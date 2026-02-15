@@ -8,17 +8,12 @@ type WorkoutPerformFormProps = {
   template: WorkoutPerformTemplate;
   defaultValues: WorkoutPerformFormValues;
   onSubmit: (values: WorkoutPerformFormValues) => Promise<void> | void;
-  onUpdateExerciseComment: (
-    templateExerciseId: string,
-    comment: string | null,
-  ) => Promise<void>;
 };
 
 export const WorkoutPerformForm: React.FC<WorkoutPerformFormProps> = ({
   template,
   defaultValues,
   onSubmit,
-  onUpdateExerciseComment,
 }) => {
   const methods = useForm<WorkoutPerformFormValues>({
     defaultValues,
@@ -29,10 +24,7 @@ export const WorkoutPerformForm: React.FC<WorkoutPerformFormProps> = ({
   return (
     <FormProvider {...methods}>
       <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
-        <Exercises
-          template={template}
-          onUpdateExerciseComment={onUpdateExerciseComment}
-        />
+        <Exercises template={template} />
 
         <div className="flex flex-col gap-3 rounded-lg border p-4">
           <label className="text-sm text-slate-600">RPE</label>

@@ -1,19 +1,9 @@
 import {
-  useMutation,
   useQuery,
-  useQueryClient,
   type UseQueryOptions,
 } from "@tanstack/react-query";
 
-import {
-  getWorkoutTemplate,
-  getWorkoutTemplates,
-  updateWorkoutTemplateExerciseComment,
-} from "./api";
-import type {
-  UpdateWorkoutTemplateExerciseCommentPayload,
-  WorkoutTemplate,
-} from "./types";
+import { getWorkoutTemplate, getWorkoutTemplates } from "./api";
 
 export const useGetWorkoutTemplates = () => {
   return useQuery({
@@ -36,42 +26,3 @@ export const useGetWorkoutTemplate = (
     ...options,
   });
 };
-
-export const useUpdateWorkoutTemplateExerciseComment = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: updateWorkoutTemplateExerciseComment,
-    onSuccess: (updatedExercise, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["workout-templates"] });
-      queryClient.invalidateQueries({
-        queryKey: ["workout-template", variables.templateId],
-      });
-
-      queryClient.setQueryData<WorkoutTemplate>(
-        ["workout-template", variables.templateId],
-        (previousTemplate) => {
-          if (!previousTemplate) {
-            return previousTemplate;
-          }
-
-          return {
-            ...previousTemplate,
-            exercises: previousTemplate.exercises.map((exercise) => {
-              if (exercise.id !== variables.templateExerciseId) {
-                return exercise;
-              }
-
-              return {
-                ...exercise,
-                comment: updatedExercise.comment,
-              };
-            }),
-          };
-        },
-      );
-    },
-  });
-};
-
-export type { UpdateWorkoutTemplateExerciseCommentPayload };

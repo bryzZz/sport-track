@@ -43,6 +43,25 @@ export const workoutSessionsRoutes: FastifyPluginAsync = async (app) => {
         const templateExercise = exercise.templateExerciseId
           ? templateExerciseById.get(exercise.templateExerciseId)
           : undefined;
+        const normalizedComment =
+          exercise.comment === undefined
+            ? templateExercise?.comment ?? null
+            : exercise.comment ?? null;
+
+        if (
+          templateExercise &&
+          exercise.comment !== undefined &&
+          normalizedComment !== templateExercise.comment
+        ) {
+          await tx.workoutTemplateExercise.update({
+            where: {
+              id: templateExercise.id,
+            },
+            data: {
+              comment: normalizedComment,
+            },
+          });
+        }
 
         const createdExercise = await tx.workoutSessionExercise.create({
           data: {
@@ -50,7 +69,9 @@ export const workoutSessionsRoutes: FastifyPluginAsync = async (app) => {
             exerciseTypeId: exercise.exerciseTypeId,
             templateExerciseId: exercise.templateExerciseId,
             orderIndex: exercise.orderIndex,
-            templateCommentSnapshot: templateExercise?.comment,
+            templateCommentSnapshot: templateExercise
+              ? normalizedComment
+              : undefined,
           },
         });
 

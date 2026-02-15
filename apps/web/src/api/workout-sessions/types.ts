@@ -9,6 +9,7 @@ export type WorkoutSessionExercisePayload = {
   exerciseTypeId: string;
   templateExerciseId?: string;
   orderIndex: number;
+  comment?: string | null;
   sets: WorkoutSessionSetPayload[];
 };
 

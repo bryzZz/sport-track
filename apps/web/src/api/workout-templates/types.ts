@@ -29,9 +29,3 @@ export type WorkoutTemplate = {
   updatedAt: string;
   exercises: WorkoutTemplateExercise[];
 };
-
-export type UpdateWorkoutTemplateExerciseCommentPayload = {
-  templateId: string;
-  templateExerciseId: string;
-  comment: string | null;
-};

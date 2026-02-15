@@ -17,7 +17,3 @@ export const createWorkoutTemplateSchema = z.object({
   name: z.string().trim().min(1),
   exercises: z.array(workoutTemplateExerciseSchema).min(1),
 });
-
-export const updateWorkoutTemplateExerciseCommentSchema = z.object({
-  comment: z.string().trim().nullable(),
-});

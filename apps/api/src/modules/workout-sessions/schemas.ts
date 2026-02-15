@@ -11,6 +11,7 @@ export const workoutSessionExerciseSchema = z.object({
   exerciseTypeId: z.string().uuid(),
   templateExerciseId: z.string().uuid().optional(),
   orderIndex: z.number().int().min(0),
+  comment: z.string().trim().nullable().optional(),
   sets: z.array(workoutSessionSetSchema).min(1),
 });
 
