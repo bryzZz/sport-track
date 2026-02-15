@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useSearchParams } from "react-router";
 
 import {
@@ -6,12 +6,18 @@ import {
   type WorkoutPerformFormValues,
 } from "components/WorkoutPerformForm";
 
-import type { WorkoutTemplateDto } from "../api/types";
-import { workoutSessionsApi } from "../api/workoutSessionsApi";
-import { workoutTemplatesApi } from "../api/workoutTemplatesApi";
+import {
+  type CreateWorkoutSessionPayload,
+  useCreateWorkoutSession,
+} from "../api/workout-sessions";
+import {
+  useGetWorkoutTemplate,
+  useUpdateWorkoutTemplateExerciseComment,
+  type WorkoutTemplate,
+} from "../api/workout-templates";
 
 const createInitialValues = (
-  template: WorkoutTemplateDto,
+  template: WorkoutTemplate,
 ): WorkoutPerformFormValues => ({
   rpe: 7,
   exercises: template.exercises.map((exercise) => ({
@@ -29,34 +35,12 @@ const createInitialValues = (
 export const WorkoutPerform: React.FC = () => {
   const [searchParams] = useSearchParams();
   const templateId = searchParams.get("templateId");
-  const [template, setTemplate] = useState<WorkoutTemplateDto | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  useEffect(() => {
-    if (!templateId) {
-      setIsLoading(false);
-      setTemplate(null);
-      setErrorMessage("");
-
-      return;
-    }
-
-    const handleLoadTemplate = async () => {
-      try {
-        setIsLoading(true);
-        setErrorMessage("");
-        const templateData = await workoutTemplatesApi.getById(templateId);
-        setTemplate(templateData);
-      } catch {
-        setErrorMessage("Шаблон тренировки не найден.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    void handleLoadTemplate();
-  }, [templateId]);
+  const { data: template, isLoading, isError } = useGetWorkoutTemplate(
+    templateId ?? "",
+  );
+  const { mutateAsync: createWorkoutSession } = useCreateWorkoutSession();
+  const { mutateAsync: updateTemplateExerciseComment } =
+    useUpdateWorkoutTemplateExerciseComment();
 
   if (!templateId) {
     return (
@@ -76,11 +60,11 @@ export const WorkoutPerform: React.FC = () => {
     );
   }
 
-  if (errorMessage || !template) {
+  if (isError || !template) {
     return (
       <div>
         <h1 className="mb-6 text-4xl">Выполнение тренировки</h1>
-        <p>{errorMessage || "Шаблон тренировки не найден."}</p>
+        <p>Шаблон тренировки не найден.</p>
       </div>
     );
   }
@@ -88,7 +72,7 @@ export const WorkoutPerform: React.FC = () => {
   const initialValues = createInitialValues(template);
 
   const handleSubmit = async (values: WorkoutPerformFormValues) => {
-    await workoutSessionsApi.create({
+    const payload: CreateWorkoutSessionPayload = {
       templateId: template.id,
       rpe: values.rpe,
       performedAt: new Date().toISOString(),
@@ -103,7 +87,9 @@ export const WorkoutPerform: React.FC = () => {
           isCompleted: set.isCompleted,
         })),
       })),
-    });
+    };
+
+    await createWorkoutSession(payload);
 
     window.alert("Тренировка сохранена.");
     window.history.back();
@@ -113,30 +99,10 @@ export const WorkoutPerform: React.FC = () => {
     templateExerciseId: string,
     comment: string | null,
   ) => {
-    await workoutTemplatesApi.updateExerciseComment(
-      template.id,
+    await updateTemplateExerciseComment({
+      templateId: template.id,
       templateExerciseId,
-      { comment },
-    );
-
-    setTemplate((previousTemplate) => {
-      if (!previousTemplate) {
-        return previousTemplate;
-      }
-
-      return {
-        ...previousTemplate,
-        exercises: previousTemplate.exercises.map((exercise) => {
-          if (exercise.id !== templateExerciseId) {
-            return exercise;
-          }
-
-          return {
-            ...exercise,
-            comment,
-          };
-        }),
-      };
+      comment,
     });
   };
 

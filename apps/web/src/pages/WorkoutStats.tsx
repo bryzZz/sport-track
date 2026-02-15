@@ -1,7 +1,10 @@
 import React from "react";
 
 import Fire from "assets/icons/fire.svg?react";
-import { ExerciseStatsCard } from "components/ExerciseStatsCard";
+import {
+  type ExerciseStats,
+  ExerciseStatsCard,
+} from "components/ExerciseStatsCard";
 import { WorkoutHeatmapCompact } from "components/WorkoutHeatmapCompact";
 
 const recordDates = [
@@ -40,7 +43,7 @@ const createRecords = ({
   weightStep: number;
   repsStep: number;
   cheatingEvery: number;
-}) =>
+}): ExerciseStats["records"] =>
   recordDates.map((date, index) => {
     const done = !missedDates.has(date);
     if (!done) {

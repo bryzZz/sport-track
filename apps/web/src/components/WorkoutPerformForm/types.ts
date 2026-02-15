@@ -1,4 +1,4 @@
-import type { WorkoutTemplateDto } from "../../api/types";
+import type { WorkoutTemplate } from "../../api/workout-templates";
 
 export type WorkoutPerformSetValues = {
   reps: number;
@@ -18,6 +18,6 @@ export type WorkoutPerformFormValues = {
   exercises: WorkoutPerformExerciseValues[];
 };
 
-export type WorkoutPerformTemplate = WorkoutTemplateDto;
+export type WorkoutPerformTemplate = WorkoutTemplate;
 export type WorkoutPerformTemplateExercise =
   WorkoutPerformTemplate["exercises"][number];

@@ -1,37 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router";
 
-import type { WorkoutTemplateDto } from "../api/types";
-import { workoutTemplatesApi } from "../api/workoutTemplatesApi";
+import { useGetWorkoutTemplates } from "../api/workout-templates";
 
 export const WorkoutTemplates: React.FC = () => {
-  const [templates, setTemplates] = useState<WorkoutTemplateDto[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  useEffect(() => {
-    const handleLoadTemplates = async () => {
-      try {
-        setIsLoading(true);
-        setErrorMessage("");
-        const templatesData = await workoutTemplatesApi.getList();
-        setTemplates(templatesData);
-      } catch {
-        setErrorMessage("Не удалось загрузить шаблоны тренировок.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    void handleLoadTemplates();
-  }, []);
+  const { data: templates = [], isLoading, isError } = useGetWorkoutTemplates();
 
   if (isLoading) {
     return <p>Загрузка шаблонов...</p>;
   }
 
-  if (errorMessage) {
-    return <p>{errorMessage}</p>;
+  if (isError) {
+    return <p>Не удалось загрузить шаблоны тренировок.</p>;
   }
 
   return (
