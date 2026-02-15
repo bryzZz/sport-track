@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev:web": "pnpm --filter web dev",
+    "dev:web": "pnpm --filter web dev --host 0.0.0.0 --port 5174",
     "dev:api": "pnpm --filter api dev",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",

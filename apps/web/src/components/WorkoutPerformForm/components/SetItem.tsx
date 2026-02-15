@@ -1,14 +1,15 @@
 import React from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 
-import type { WorkoutTemplateNew } from "constants";
-
-import type { WorkoutPerformFormValues } from "../WorkoutPerformForm";
+import type {
+  WorkoutPerformFormValues,
+  WorkoutPerformTemplateExercise,
+} from "../types";
 
 type SetItemProps = {
   exerciseIndex: number;
   index: number;
-  planSet?: WorkoutTemplateNew["exercises"][number]["sets"][number];
+  planSet?: WorkoutPerformTemplateExercise["sets"][number];
   onRemove: (index: number) => void;
 };
 
@@ -29,7 +30,7 @@ export const SetItem: React.FC<SetItemProps> = ({
   const hasPartialReps = partialReps !== undefined;
   const planText = planSet
     ? `${planSet.weight}кг x ${planSet.reps}${
-        planSet.partialReps !== undefined ? ` | ${planSet.partialReps}` : ""
+        planSet.partialReps !== null ? ` | ${planSet.partialReps}` : ""
       }`
     : "-";
 

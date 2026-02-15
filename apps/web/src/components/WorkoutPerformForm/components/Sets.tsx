@@ -1,15 +1,16 @@
 import React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
-import type { WorkoutTemplateNew } from "constants";
-
-import type { WorkoutPerformFormValues } from "../WorkoutPerformForm";
+import type {
+  WorkoutPerformFormValues,
+  WorkoutPerformTemplateExercise,
+} from "../types";
 
 import { SetItem } from "./SetItem";
 
 type SetsProps = {
   exerciseIndex: number;
-  planSets: WorkoutTemplateNew["exercises"][number]["sets"];
+  planSets: WorkoutPerformTemplateExercise["sets"];
 };
 
 export const Sets: React.FC<SetsProps> = ({ exerciseIndex, planSets }) => {

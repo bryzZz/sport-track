@@ -1,39 +1,62 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
-
-import type { WorkoutPerformExercise, WorkoutTemplateNew } from "constants";
 
 import {
   WorkoutPerformForm,
   type WorkoutPerformFormValues,
 } from "components/WorkoutPerformForm";
-import { workoutTemplatesNew } from "constants";
 
-type RealWorkoutRecord = {
-  id: string;
-  performedAt: string;
-  templateId: string;
-  rpe: number;
-  exercises: WorkoutPerformExercise[];
-};
+import type { WorkoutTemplateDto } from "../api/types";
+import { workoutSessionsApi } from "../api/workoutSessionsApi";
+import { workoutTemplatesApi } from "../api/workoutTemplatesApi";
 
-const createInitialValues = (template: WorkoutTemplateNew) => ({
+const createInitialValues = (
+  template: WorkoutTemplateDto,
+): WorkoutPerformFormValues => ({
   rpe: 7,
   exercises: template.exercises.map((exercise) => ({
-    exerciseId: exercise.exerciseId,
+    exerciseTypeId: exercise.exerciseTypeId,
+    templateExerciseId: exercise.id,
     sets: exercise.sets.map((set) => ({
       reps: set.reps,
-      partialReps: set.partialReps,
-      weight: set.weight,
+      partialReps: set.partialReps ?? undefined,
+      weight: Number(set.weight),
       isCompleted: false,
     })),
-    comment: exercise.comment,
   })),
 });
 
 export const WorkoutPerform: React.FC = () => {
   const [searchParams] = useSearchParams();
   const templateId = searchParams.get("templateId");
+  const [template, setTemplate] = useState<WorkoutTemplateDto | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    if (!templateId) {
+      setIsLoading(false);
+      setTemplate(null);
+      setErrorMessage("");
+
+      return;
+    }
+
+    const handleLoadTemplate = async () => {
+      try {
+        setIsLoading(true);
+        setErrorMessage("");
+        const templateData = await workoutTemplatesApi.getById(templateId);
+        setTemplate(templateData);
+      } catch {
+        setErrorMessage("Шаблон тренировки не найден.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    void handleLoadTemplate();
+  }, [templateId]);
 
   if (!templateId) {
     return (
@@ -44,29 +67,77 @@ export const WorkoutPerform: React.FC = () => {
     );
   }
 
-  const template = workoutTemplatesNew.find((item) => item.id === templateId);
-
-  if (!template) {
+  if (isLoading) {
     return (
       <div>
         <h1 className="mb-6 text-4xl">Выполнение тренировки</h1>
-        <p>Шаблон тренировки не найден.</p>
+        <p>Загрузка шаблона...</p>
+      </div>
+    );
+  }
+
+  if (errorMessage || !template) {
+    return (
+      <div>
+        <h1 className="mb-6 text-4xl">Выполнение тренировки</h1>
+        <p>{errorMessage || "Шаблон тренировки не найден."}</p>
       </div>
     );
   }
 
   const initialValues = createInitialValues(template);
 
-  const handleSubmit = (values: WorkoutPerformFormValues) => {
-    const record: RealWorkoutRecord = {
-      id: `record-${Date.now()}`,
-      performedAt: new Date().toISOString(),
+  const handleSubmit = async (values: WorkoutPerformFormValues) => {
+    await workoutSessionsApi.create({
       templateId: template.id,
       rpe: values.rpe,
-      exercises: values.exercises,
-    };
+      performedAt: new Date().toISOString(),
+      exercises: values.exercises.map((exercise, exerciseIndex) => ({
+        exerciseTypeId: exercise.exerciseTypeId,
+        templateExerciseId: exercise.templateExerciseId,
+        orderIndex: exerciseIndex,
+        sets: exercise.sets.map((set) => ({
+          reps: set.reps,
+          partialReps: set.partialReps,
+          weight: set.weight,
+          isCompleted: set.isCompleted,
+        })),
+      })),
+    });
 
-    console.log(record);
+    window.alert("Тренировка сохранена.");
+    window.history.back();
+  };
+
+  const handleUpdateExerciseComment = async (
+    templateExerciseId: string,
+    comment: string | null,
+  ) => {
+    await workoutTemplatesApi.updateExerciseComment(
+      template.id,
+      templateExerciseId,
+      { comment },
+    );
+
+    setTemplate((previousTemplate) => {
+      if (!previousTemplate) {
+        return previousTemplate;
+      }
+
+      return {
+        ...previousTemplate,
+        exercises: previousTemplate.exercises.map((exercise) => {
+          if (exercise.id !== templateExerciseId) {
+            return exercise;
+          }
+
+          return {
+            ...exercise,
+            comment,
+          };
+        }),
+      };
+    });
   };
 
   return (
@@ -86,6 +157,7 @@ export const WorkoutPerform: React.FC = () => {
         template={template}
         defaultValues={initialValues}
         onSubmit={handleSubmit}
+        onUpdateExerciseComment={handleUpdateExerciseComment}
       />
     </div>
   );
