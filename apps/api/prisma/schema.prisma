@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model ExerciseType {
+  id                String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name              String                    @unique
+  createdAt         DateTime                  @default(now()) @map("created_at") @db.Timestamptz(6)
+  templateExercises WorkoutTemplateExercise[]
+  sessionExercises  WorkoutSessionExercise[]
+
+  @@map("exercise_types")
+}
+
+model WorkoutTemplate {
+  id        String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  createdAt DateTime                  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime                  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  exercises WorkoutTemplateExercise[]
+  sessions  WorkoutSession[]
+
+  @@index([createdAt])
+  @@map("workout_templates")
+}
+
+model WorkoutTemplateExercise {
+  id               String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  templateId       String                   @map("template_id") @db.Uuid
+  exerciseTypeId   String                   @map("exercise_type_id") @db.Uuid
+  orderIndex       Int                      @map("order_index")
+  comment          String?
+  createdAt        DateTime                 @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime                 @updatedAt @map("updated_at") @db.Timestamptz(6)
+  template         WorkoutTemplate          @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  exerciseType     ExerciseType             @relation(fields: [exerciseTypeId], references: [id], onDelete: Restrict)
+  sets             WorkoutTemplateSet[]
+  sessionExercises WorkoutSessionExercise[]
+
+  @@unique([templateId, orderIndex])
+  @@index([templateId])
+  @@index([exerciseTypeId])
+  @@map("workout_template_exercises")
+}
+
+model WorkoutTemplateSet {
+  id                 String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  templateExerciseId String                  @map("template_exercise_id") @db.Uuid
+  orderIndex         Int                     @map("order_index")
+  reps               Int
+  partialReps        Int?                    @map("partial_reps")
+  weight             Decimal                 @db.Decimal(8, 2)
+  createdAt          DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime                @updatedAt @map("updated_at") @db.Timestamptz(6)
+  templateExercise   WorkoutTemplateExercise @relation(fields: [templateExerciseId], references: [id], onDelete: Cascade)
+
+  @@unique([templateExerciseId, orderIndex])
+  @@index([templateExerciseId])
+  @@map("workout_template_sets")
+}
+
+model WorkoutSession {
+  id          String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  templateId  String                   @map("template_id") @db.Uuid
+  performedAt DateTime                 @map("performed_at") @db.Timestamptz(6)
+  rpe         Int
+  createdAt   DateTime                 @default(now()) @map("created_at") @db.Timestamptz(6)
+  template    WorkoutTemplate          @relation(fields: [templateId], references: [id], onDelete: Restrict)
+  exercises   WorkoutSessionExercise[]
+
+  @@index([templateId, performedAt])
+  @@index([performedAt])
+  @@map("workout_sessions")
+}
+
+model WorkoutSessionExercise {
+  id                      String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sessionId               String                   @map("session_id") @db.Uuid
+  exerciseTypeId          String                   @map("exercise_type_id") @db.Uuid
+  templateExerciseId      String?                  @map("template_exercise_id") @db.Uuid
+  orderIndex              Int                      @map("order_index")
+  templateCommentSnapshot String?                  @map("template_comment_snapshot")
+  createdAt               DateTime                 @default(now()) @map("created_at") @db.Timestamptz(6)
+  session                 WorkoutSession           @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  exerciseType            ExerciseType             @relation(fields: [exerciseTypeId], references: [id], onDelete: Restrict)
+  templateExercise        WorkoutTemplateExercise? @relation(fields: [templateExerciseId], references: [id], onDelete: SetNull)
+  sets                    WorkoutSessionSet[]
+
+  @@unique([sessionId, orderIndex])
+  @@index([sessionId])
+  @@index([exerciseTypeId])
+  @@map("workout_session_exercises")
+}
+
+model WorkoutSessionSet {
+  id                String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sessionExerciseId String                 @map("session_exercise_id") @db.Uuid
+  orderIndex        Int                    @map("order_index")
+  reps              Int
+  partialReps       Int?                   @map("partial_reps")
+  weight            Decimal                @db.Decimal(8, 2)
+  isCompleted       Boolean                @default(false) @map("is_completed")
+  createdAt         DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+  sessionExercise   WorkoutSessionExercise @relation(fields: [sessionExerciseId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionExerciseId, orderIndex])
+  @@index([sessionExerciseId])
+  @@map("workout_session_sets")
+}
