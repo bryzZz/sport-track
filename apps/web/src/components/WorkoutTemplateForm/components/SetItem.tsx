@@ -1,6 +1,7 @@
 import React from "react";
+import { useFormContext } from "react-hook-form";
 
-import { Phases } from "./Phases";
+import type { WorkoutTemplateFormValues } from "../WorkoutTemplateForm";
 
 interface SetItemProps {
   exerciseIndex: number;
@@ -10,6 +11,7 @@ interface SetItemProps {
 
 export const SetItem: React.FC<SetItemProps> = (props) => {
   const { exerciseIndex, index, onRemove } = props;
+  const { register } = useFormContext<WorkoutTemplateFormValues>();
 
   return (
     <div className="rounded border border-zinc-700 p-2">
@@ -24,7 +26,39 @@ export const SetItem: React.FC<SetItemProps> = (props) => {
         </button>
       </div>
 
-      <Phases exerciseIndex={exerciseIndex} setIndex={index} />
+      <div className="grid grid-cols-3 gap-2">
+        <input
+          className="w-full rounded border border-zinc-600 bg-transparent px-2 py-1"
+          type="number"
+          min={0}
+          step={0.5}
+          placeholder="Вес"
+          {...register(`exercises.${exerciseIndex}.sets.${index}.weight`, {
+            valueAsNumber: true,
+          })}
+        />
+
+        <input
+          className="w-full rounded border border-zinc-600 bg-transparent px-2 py-1"
+          type="number"
+          min={1}
+          placeholder="Повторы"
+          {...register(`exercises.${exerciseIndex}.sets.${index}.reps`, {
+            valueAsNumber: true,
+          })}
+        />
+
+        <input
+          className="w-full rounded border border-zinc-600 bg-transparent px-2 py-1"
+          type="number"
+          min={0}
+          placeholder="Частичные"
+          {...register(`exercises.${exerciseIndex}.sets.${index}.partialReps`, {
+            setValueAs: (value: string) =>
+              value === "" ? undefined : Number(value),
+          })}
+        />
+      </div>
     </div>
   );
 };

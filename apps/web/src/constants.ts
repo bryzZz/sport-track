@@ -136,7 +136,10 @@ export type WorkoutTemplateNew = {
 type WorkoutTemplateNewExercise = WorkoutTemplateNew["exercises"][number];
 type WorkoutTemplateNewSet = WorkoutTemplateNewExercise["sets"][number];
 
-export type WorkoutPerformExercise = Omit<WorkoutTemplateNewExercise, "sets"> & {
+export type WorkoutPerformExercise = Omit<
+  WorkoutTemplateNewExercise,
+  "sets"
+> & {
   sets: (WorkoutTemplateNewSet & {
     isCompleted: boolean;
   })[];

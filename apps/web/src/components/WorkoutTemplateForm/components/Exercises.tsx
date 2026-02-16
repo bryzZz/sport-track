@@ -2,13 +2,13 @@ import React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { ReactSortable } from "react-sortablejs";
 
-import type { WorkoutTemplateFormFormValues } from "../WorkoutTemplateForm";
+import type { WorkoutTemplateFormValues } from "../WorkoutTemplateForm";
 
 import { ExerciseItem } from "./ExerciseItem";
 
 export const Exercises: React.FC = () => {
   const { control, getValues } =
-    useFormContext<WorkoutTemplateFormFormValues>();
+    useFormContext<WorkoutTemplateFormValues>();
 
   const { fields, append, remove, move } = useFieldArray({
     control,
@@ -19,11 +19,13 @@ export const Exercises: React.FC = () => {
     const currentExercises = getValues("exercises");
     const lastExercise = currentExercises.at(-1);
 
-    if (lastExercise?.exerciseId === "") return;
+    if (lastExercise?.exerciseTypeId === "") {
+      return;
+    }
 
     append({
-      exerciseId: "",
-      sets: [{ phases: [{ reps: 10, weight: 10, type: "strict" }] }],
+      exerciseTypeId: "",
+      sets: [{ reps: 10, weight: 10 }],
       comment: "",
     });
   };

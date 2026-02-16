@@ -1,9 +1,9 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
 
-import { exerciseTypes } from "constants";
+import { useGetExerciseTypes } from "api/exercise-types";
 
-import type { WorkoutTemplateFormFormValues } from "../WorkoutTemplateForm";
+import type { WorkoutTemplateFormValues } from "../WorkoutTemplateForm";
 
 import { Sets } from "./Sets";
 
@@ -15,7 +15,12 @@ interface ExerciseItemProps {
 export const ExerciseItem: React.FC<ExerciseItemProps> = (props) => {
   const { index, onRemove } = props;
 
-  const { register } = useFormContext<WorkoutTemplateFormFormValues>();
+  const { register } = useFormContext<WorkoutTemplateFormValues>();
+  const {
+    data: exerciseTypes = [],
+    isLoading: isExerciseTypesLoading,
+    isError: isExerciseTypesError,
+  } = useGetExerciseTypes();
 
   return (
     <div className="w-full rounded border border-zinc-600 p-2">
@@ -29,9 +34,16 @@ export const ExerciseItem: React.FC<ExerciseItemProps> = (props) => {
         </button>
         <select
           className="min-w-55 flex-1 rounded border border-zinc-600 bg-transparent px-2 py-1"
-          {...register(`exercises.${index}.exerciseId`)}
+          {...register(`exercises.${index}.exerciseTypeId`)}
+          disabled={isExerciseTypesLoading || isExerciseTypesError}
         >
-          <option value="">Select Exercise</option>
+          <option value="">
+            {isExerciseTypesLoading
+              ? "Загрузка упражнений..."
+              : isExerciseTypesError
+                ? "Ошибка загрузки упражнений"
+                : "Выберите упражнение"}
+          </option>
           {exerciseTypes.map((type) => (
             <option key={type.id} value={type.id}>
               {type.name}

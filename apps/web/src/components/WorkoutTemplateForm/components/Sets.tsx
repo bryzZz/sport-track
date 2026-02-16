@@ -1,7 +1,7 @@
 import React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
-import type { WorkoutTemplateFormFormValues } from "../WorkoutTemplateForm";
+import type { WorkoutTemplateFormValues } from "../WorkoutTemplateForm";
 
 import { SetItem } from "./SetItem";
 
@@ -12,7 +12,7 @@ interface SetsProps {
 export const Sets: React.FC<SetsProps> = (props) => {
   const { exerciseIndex } = props;
 
-  const { control } = useFormContext<WorkoutTemplateFormFormValues>();
+  const { control } = useFormContext<WorkoutTemplateFormValues>();
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -20,8 +20,12 @@ export const Sets: React.FC<SetsProps> = (props) => {
   });
 
   const handleAddSet = () => {
+    const lastSet = fields[fields.length - 1];
+
     append({
-      phases: [{ reps: 10, weight: 10, type: "strict" }],
+      reps: lastSet?.reps ?? 10,
+      weight: lastSet?.weight ?? 10,
+      partialReps: lastSet?.partialReps ?? undefined,
     });
   };
 

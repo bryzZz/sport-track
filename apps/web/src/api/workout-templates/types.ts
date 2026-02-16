@@ -29,3 +29,21 @@ export type WorkoutTemplate = {
   updatedAt: string;
   exercises: WorkoutTemplateExercise[];
 };
+
+export type WorkoutTemplateSetPayload = {
+  reps: number;
+  partialReps?: number;
+  weight: number;
+};
+
+export type WorkoutTemplateExercisePayload = {
+  exerciseTypeId: string;
+  orderIndex: number;
+  comment?: string;
+  sets: WorkoutTemplateSetPayload[];
+};
+
+export type UpsertWorkoutTemplatePayload = {
+  name: string;
+  exercises: WorkoutTemplateExercisePayload[];
+};

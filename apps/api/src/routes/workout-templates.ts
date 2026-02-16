@@ -127,4 +127,95 @@ export const workoutTemplatesRoutes: FastifyPluginAsync = async (app) => {
     return reply.status(201).send(template);
   });
 
+  app.put("/:id", async (request, reply) => {
+    const params = request.params as { id: string };
+    const parsedBody = createWorkoutTemplateSchema.safeParse(request.body);
+
+    if (!parsedBody.success) {
+      return reply.status(400).send({
+        message: "Invalid payload",
+        issues: parsedBody.error.issues,
+      });
+    }
+
+    const existingTemplate = await prisma.workoutTemplate.findUnique({
+      where: {
+        id: params.id,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!existingTemplate) {
+      return reply.status(404).send({
+        message: "Workout template not found",
+      });
+    }
+
+    const payload = parsedBody.data;
+
+    const updatedTemplate = await prisma.$transaction(async (tx) => {
+      await tx.workoutTemplate.update({
+        where: {
+          id: params.id,
+        },
+        data: {
+          name: payload.name,
+        },
+      });
+
+      await tx.workoutTemplateExercise.deleteMany({
+        where: {
+          templateId: params.id,
+        },
+      });
+
+      for (const exercise of payload.exercises) {
+        const createdExercise = await tx.workoutTemplateExercise.create({
+          data: {
+            templateId: params.id,
+            exerciseTypeId: exercise.exerciseTypeId,
+            orderIndex: exercise.orderIndex,
+            comment: exercise.comment,
+          },
+        });
+
+        for (const [setIndex, set] of exercise.sets.entries()) {
+          await tx.workoutTemplateSet.create({
+            data: {
+              templateExerciseId: createdExercise.id,
+              orderIndex: setIndex,
+              reps: set.reps,
+              partialReps: set.partialReps,
+              weight: set.weight,
+            },
+          });
+        }
+      }
+
+      return tx.workoutTemplate.findUniqueOrThrow({
+        where: {
+          id: params.id,
+        },
+        include: {
+          exercises: {
+            orderBy: {
+              orderIndex: "asc",
+            },
+            include: {
+              exerciseType: true,
+              sets: {
+                orderBy: {
+                  orderIndex: "asc",
+                },
+              },
+            },
+          },
+        },
+      });
+    });
+
+    return updatedTemplate;
+  });
 };

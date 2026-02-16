@@ -79,9 +79,6 @@ MVP проект для отслеживания прогресса в спор�
 
 ## Доменные правила (текущие)
 
-- В `WorkoutPerform` редактирование комментария упражнения обновляет **шаблон**:
-  - `PATCH /workout-templates/:templateId/exercises/:templateExerciseId/comment`
+- В `WorkoutPerform` редактирование комментария упражнения обновляет **шаблон**
 - `weight` из API может приходить строкой (Prisma Decimal).
   На frontend приводить к `number` в слое маппинга/инициализации формы.
-- Данные для сидов не импортировать из `apps/web/src/constants.ts`.
-  Если нужно использовать те же значения, копировать их в `apps/api/prisma/seed.ts`.
