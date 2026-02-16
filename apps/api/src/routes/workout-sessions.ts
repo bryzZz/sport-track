@@ -1,8 +1,8 @@
 import type { FastifyPluginAsync } from "fastify";
 import type { Prisma } from "@prisma/client";
 
-import { prisma } from "../lib/prisma";
-import { createWorkoutSessionSchema } from "../modules/workout-sessions/schemas";
+import { prisma } from "../lib/prisma.js";
+import { createWorkoutSessionSchema } from "../modules/workout-sessions/schemas.js";
 
 class InvalidTemplateExerciseIdError extends Error {
   constructor(templateExerciseId: string) {

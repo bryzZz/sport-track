@@ -1,10 +1,10 @@
 import type { FastifyPluginAsync } from "fastify";
 
-import { prisma } from "../lib/prisma";
+import { prisma } from "../lib/prisma.js";
 import {
   workoutOverviewQuerySchema,
   workoutOverviewResponseSchema,
-} from "../modules/stats/schemas";
+} from "../modules/stats/schemas.js";
 
 const FOUR_WEEKS_DAYS = 28;
 const DAY_MS = 24 * 60 * 60 * 1000;

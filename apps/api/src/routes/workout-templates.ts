@@ -1,8 +1,8 @@
 import type { FastifyPluginAsync } from "fastify";
 import type { Prisma } from "@prisma/client";
 
-import { prisma } from "../lib/prisma";
-import { createWorkoutTemplateSchema } from "../modules/workout-templates/schemas";
+import { prisma } from "../lib/prisma.js";
+import { createWorkoutTemplateSchema } from "../modules/workout-templates/schemas.js";
 
 export const workoutTemplatesRoutes: FastifyPluginAsync = async (app) => {
   app.get("/", async () => {
