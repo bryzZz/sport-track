@@ -62,10 +62,7 @@ const getPhaseValue = (phase: ExercisePhase, metric: MetricType) => {
 export const ExerciseSetsChart: React.FC<ExerciseSetsChartProps> = ({
   records,
 }) => {
-  const [activeMetrics, setActiveMetrics] = useState<MetricType[]>([
-    "weight",
-    "reps",
-  ]);
+  const [activeMetrics, setActiveMetrics] = useState<MetricType[]>(["volume"]);
 
   if (records.length === 0) {
     return <p>Нет данных по упражнениям</p>;
