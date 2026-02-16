@@ -83,13 +83,13 @@ model WorkoutSessionExercise {
   id                      String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   sessionId               String                   @map("session_id") @db.Uuid
   exerciseTypeId          String                   @map("exercise_type_id") @db.Uuid
-  templateExerciseId      String?                  @map("template_exercise_id") @db.Uuid
+  templateExerciseId      String                   @map("template_exercise_id") @db.Uuid
   orderIndex              Int                      @map("order_index")
   templateCommentSnapshot String?                  @map("template_comment_snapshot")
   createdAt               DateTime                 @default(now()) @map("created_at") @db.Timestamptz(6)
   session                 WorkoutSession           @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   exerciseType            ExerciseType             @relation(fields: [exerciseTypeId], references: [id], onDelete: Restrict)
-  templateExercise        WorkoutTemplateExercise? @relation(fields: [templateExerciseId], references: [id], onDelete: SetNull)
+  templateExercise        WorkoutTemplateExercise  @relation(fields: [templateExerciseId], references: [id], onDelete: Restrict)
   sets                    WorkoutSessionSet[]
 
   @@unique([sessionId, orderIndex])

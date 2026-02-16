@@ -76,7 +76,7 @@ export const WorkoutPerform: React.FC = () => {
         templateExerciseId: exercise.templateExerciseId,
         orderIndex: exerciseIndex,
         comment:
-          exercise.comment.trim().length > 0 ? exercise.comment.trim() : null,
+          exercise.comment.trim().length > 0 ? exercise.comment.trim() : undefined,
         sets: exercise.sets.map((set) => ({
           reps: set.reps,
           partialReps: set.partialReps,

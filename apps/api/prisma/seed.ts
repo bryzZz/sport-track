@@ -361,8 +361,11 @@ const seedWorkoutSessions = async (
 
     for (const [exerciseIndex, exercise] of workoutSession.exercises.entries()) {
       const exerciseTypeId = exerciseTypeIdByName.get(exercise.exerciseName);
+      const templateExerciseId = templateExerciseIdByKey.get(
+        `${workoutSession.templateName}:${exercise.exerciseName}`,
+      );
 
-      if (!exerciseTypeId || !exercise.sets.length) {
+      if (!exerciseTypeId || !templateExerciseId || !exercise.sets.length) {
         continue;
       }
 
@@ -370,9 +373,7 @@ const seedWorkoutSessions = async (
         data: {
           sessionId: createdSession.id,
           exerciseTypeId,
-          templateExerciseId: templateExerciseIdByKey.get(
-            `${workoutSession.templateName}:${exercise.exerciseName}`,
-          ),
+          templateExerciseId,
           orderIndex: exerciseIndex,
         },
       });

@@ -7,15 +7,15 @@ export type WorkoutSessionSetPayload = {
 
 export type WorkoutSessionExercisePayload = {
   exerciseTypeId: string;
-  templateExerciseId?: string;
+  templateExerciseId: string;
   orderIndex: number;
-  comment?: string | null;
+  comment?: string;
   sets: WorkoutSessionSetPayload[];
 };
 
 export type CreateWorkoutSessionPayload = {
   templateId: string;
-  performedAt?: string;
+  performedAt: string;
   rpe: number;
   exercises: WorkoutSessionExercisePayload[];
 };
