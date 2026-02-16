@@ -1,4 +1,5 @@
 import type { FastifyPluginAsync } from "fastify";
+import type { Prisma } from "@prisma/client";
 
 import { prisma } from "../lib/prisma";
 import { createWorkoutTemplateSchema } from "../modules/workout-templates/schemas";
@@ -79,27 +80,55 @@ export const workoutTemplatesRoutes: FastifyPluginAsync = async (app) => {
         },
       });
 
-      for (const exercise of payload.exercises) {
-        const createdExercise = await tx.workoutTemplateExercise.create({
-          data: {
-            templateId: createdTemplate.id,
-            exerciseTypeId: exercise.exerciseTypeId,
-            orderIndex: exercise.orderIndex,
-            comment: exercise.comment,
-          },
-        });
+      const exercisesToCreate: Prisma.WorkoutTemplateExerciseCreateManyInput[] =
+        payload.exercises.map((exercise) => ({
+          templateId: createdTemplate.id,
+          exerciseTypeId: exercise.exerciseTypeId,
+          orderIndex: exercise.orderIndex,
+          comment: exercise.comment,
+        }));
 
-        for (const [setIndex, set] of exercise.sets.entries()) {
-          await tx.workoutTemplateSet.create({
-            data: {
-              templateExerciseId: createdExercise.id,
-              orderIndex: setIndex,
-              reps: set.reps,
-              partialReps: set.partialReps,
-              weight: set.weight,
+      const createdExercises =
+        exercisesToCreate.length === 0
+          ? []
+          : await tx.workoutTemplateExercise.createManyAndReturn({
+            data: exercisesToCreate,
+            select: {
+              id: true,
+              orderIndex: true,
             },
           });
+
+      const setsByExerciseOrder = new Map<number, typeof payload.exercises[number]["sets"]>();
+
+      for (const exercise of payload.exercises) {
+        setsByExerciseOrder.set(exercise.orderIndex, exercise.sets);
+      }
+
+      const setsToCreate: Prisma.WorkoutTemplateSetCreateManyInput[] = [];
+
+      for (const createdExercise of createdExercises) {
+        const exerciseSets = setsByExerciseOrder.get(createdExercise.orderIndex);
+
+        if (!exerciseSets) {
+          continue;
         }
+
+        setsToCreate.push(
+          ...exerciseSets.map((set, setIndex) => ({
+            templateExerciseId: createdExercise.id,
+            orderIndex: setIndex,
+            reps: set.reps,
+            partialReps: set.partialReps,
+            weight: set.weight,
+          })),
+        );
+      }
+
+      if (setsToCreate.length > 0) {
+        await tx.workoutTemplateSet.createMany({
+          data: setsToCreate,
+        });
       }
 
       return tx.workoutTemplate.findUniqueOrThrow({
@@ -122,6 +151,9 @@ export const workoutTemplatesRoutes: FastifyPluginAsync = async (app) => {
           },
         },
       });
+    }, {
+      maxWait: 10_000,
+      timeout: 20_000,
     });
 
     return reply.status(201).send(template);
@@ -171,27 +203,55 @@ export const workoutTemplatesRoutes: FastifyPluginAsync = async (app) => {
         },
       });
 
-      for (const exercise of payload.exercises) {
-        const createdExercise = await tx.workoutTemplateExercise.create({
-          data: {
-            templateId: params.id,
-            exerciseTypeId: exercise.exerciseTypeId,
-            orderIndex: exercise.orderIndex,
-            comment: exercise.comment,
-          },
-        });
+      const exercisesToCreate: Prisma.WorkoutTemplateExerciseCreateManyInput[] =
+        payload.exercises.map((exercise) => ({
+          templateId: params.id,
+          exerciseTypeId: exercise.exerciseTypeId,
+          orderIndex: exercise.orderIndex,
+          comment: exercise.comment,
+        }));
 
-        for (const [setIndex, set] of exercise.sets.entries()) {
-          await tx.workoutTemplateSet.create({
-            data: {
-              templateExerciseId: createdExercise.id,
-              orderIndex: setIndex,
-              reps: set.reps,
-              partialReps: set.partialReps,
-              weight: set.weight,
+      const createdExercises =
+        exercisesToCreate.length === 0
+          ? []
+          : await tx.workoutTemplateExercise.createManyAndReturn({
+            data: exercisesToCreate,
+            select: {
+              id: true,
+              orderIndex: true,
             },
           });
+
+      const setsByExerciseOrder = new Map<number, typeof payload.exercises[number]["sets"]>();
+
+      for (const exercise of payload.exercises) {
+        setsByExerciseOrder.set(exercise.orderIndex, exercise.sets);
+      }
+
+      const setsToCreate: Prisma.WorkoutTemplateSetCreateManyInput[] = [];
+
+      for (const createdExercise of createdExercises) {
+        const exerciseSets = setsByExerciseOrder.get(createdExercise.orderIndex);
+
+        if (!exerciseSets) {
+          continue;
         }
+
+        setsToCreate.push(
+          ...exerciseSets.map((set, setIndex) => ({
+            templateExerciseId: createdExercise.id,
+            orderIndex: setIndex,
+            reps: set.reps,
+            partialReps: set.partialReps,
+            weight: set.weight,
+          })),
+        );
+      }
+
+      if (setsToCreate.length > 0) {
+        await tx.workoutTemplateSet.createMany({
+          data: setsToCreate,
+        });
       }
 
       return tx.workoutTemplate.findUniqueOrThrow({
@@ -214,6 +274,9 @@ export const workoutTemplatesRoutes: FastifyPluginAsync = async (app) => {
           },
         },
       });
+    }, {
+      maxWait: 10_000,
+      timeout: 20_000,
     });
 
     return updatedTemplate;

@@ -3,20 +3,51 @@ export type StatsDateRange = {
   to?: string;
 };
 
-export type WorkoutCompletion = {
+export type WorkoutOverviewStats = {
+  template: {
+    id: string;
+    name: string;
+  };
+  summary: {
+    sessionsCount: number;
+    lastSessionDate: string | null;
+    totalVolume: {
+      value: number;
+      unit: "kg";
+      trend: {
+        period: "4w";
+        deltaPercent: number | null;
+      };
+    };
+    averageIntensity: {
+      rpe: number | null;
+    };
+  };
+  exercises: WorkoutOverviewExercise[];
+};
+
+export type WorkoutOverviewExercisePhase = {
+  reps: number;
+  weight: number;
+  type: "strict" | "cheating";
+};
+
+export type WorkoutOverviewExerciseSet = {
+  phases: WorkoutOverviewExercisePhase[];
+};
+
+export type WorkoutOverviewExerciseRecord = {
   date: string;
   done: boolean;
+  sets: WorkoutOverviewExerciseSet[];
 };
 
-export type ExerciseProgressSet = {
-  orderIndex: number;
-  reps: number;
-  partialReps: number | null;
-  weight: number;
-  isCompleted: boolean;
-};
-
-export type ExerciseProgress = {
-  sessionDate: string;
-  sets: ExerciseProgressSet[];
+export type WorkoutOverviewExercise = {
+  id: string;
+  name: string;
+  bestSet: {
+    reps: number;
+    weight: number;
+  };
+  records: WorkoutOverviewExerciseRecord[];
 };
