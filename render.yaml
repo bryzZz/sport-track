@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: sport-track-api
+    runtime: node
+    plan: free
+    rootDir: .
+    buildCommand: pnpm install --frozen-lockfile && pnpm --filter api prisma:generate && pnpm --filter api build
+    preDeployCommand: pnpm --filter api exec prisma migrate deploy
+    startCommand: pnpm --filter api start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000
+      - key: CORS_ORIGIN
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+
+  - type: web
+    name: sport-track-web
+    runtime: static
+    rootDir: .
+    buildCommand: pnpm install --frozen-lockfile && pnpm --filter web build
+    staticPublishPath: apps/web/dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false
