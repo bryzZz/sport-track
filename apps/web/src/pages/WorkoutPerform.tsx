@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import { useSearchParams } from "react-router";
 
 import {
@@ -6,11 +6,15 @@ import {
   type WorkoutPerformFormValues,
 } from "components/WorkoutPerformForm";
 
+import { api } from "../api/api";
 import {
   type CreateWorkoutSessionPayload,
   useCreateWorkoutSession,
 } from "../api/workout-sessions";
-import { useGetWorkoutTemplate, type WorkoutTemplate } from "../api/workout-templates";
+import {
+  useGetWorkoutTemplate,
+  type WorkoutTemplate,
+} from "../api/workout-templates";
 
 const createInitialValues = (
   template: WorkoutTemplate,
@@ -29,13 +33,33 @@ const createInitialValues = (
   })),
 });
 
+const createDraftStorageKey = (templateId: string) =>
+  `workout-perform:draft:v1:${templateId}`;
+
 export const WorkoutPerform: React.FC = () => {
   const [searchParams] = useSearchParams();
   const templateId = searchParams.get("templateId");
-  const { data: template, isLoading, isError } = useGetWorkoutTemplate(
-    templateId ?? "",
-  );
-  const { mutateAsync: createWorkoutSession } = useCreateWorkoutSession();
+
+  const {
+    data: template,
+    isLoading,
+    isError,
+  } = useGetWorkoutTemplate(templateId ?? "", {
+    enabled: !!templateId,
+  });
+
+  const {
+    mutateAsync: createWorkoutSession,
+    isPending: isCreatingWorkoutSession,
+  } = useCreateWorkoutSession();
+
+  useEffect(() => {
+    if (!templateId) {
+      return;
+    }
+
+    void api.get("/health").catch(() => undefined);
+  }, [templateId]);
 
   if (!templateId) {
     return (
@@ -65,8 +89,13 @@ export const WorkoutPerform: React.FC = () => {
   }
 
   const initialValues = createInitialValues(template);
+  const draftStorageKey = createDraftStorageKey(template.id);
 
   const handleSubmit = async (values: WorkoutPerformFormValues) => {
+    if (isCreatingWorkoutSession) {
+      return;
+    }
+
     const payload: CreateWorkoutSessionPayload = {
       templateId: template.id,
       rpe: values.rpe,
@@ -75,8 +104,7 @@ export const WorkoutPerform: React.FC = () => {
         exerciseTypeId: exercise.exerciseTypeId,
         templateExerciseId: exercise.templateExerciseId,
         orderIndex: exerciseIndex,
-        comment:
-          exercise.comment.trim().length > 0 ? exercise.comment.trim() : undefined,
+        comment: exercise.comment.trim() || undefined,
         sets: exercise.sets.map((set) => ({
           reps: set.reps,
           partialReps: set.partialReps,
@@ -86,10 +114,17 @@ export const WorkoutPerform: React.FC = () => {
       })),
     };
 
-    await createWorkoutSession(payload);
+    try {
+      await createWorkoutSession(payload);
+      window.localStorage.removeItem(draftStorageKey);
 
-    window.alert("Тренировка сохранена.");
-    window.history.back();
+      window.alert("Тренировка сохранена.");
+      window.history.back();
+    } catch {
+      window.alert(
+        "Не удалось сохранить тренировку. Проверь соединение и попробуй снова. Черновик сохранен локально.",
+      );
+    }
   };
 
   return (
@@ -109,6 +144,7 @@ export const WorkoutPerform: React.FC = () => {
         template={template}
         defaultValues={initialValues}
         onSubmit={handleSubmit}
+        draftStorageKey={draftStorageKey}
       />
     </div>
   );
