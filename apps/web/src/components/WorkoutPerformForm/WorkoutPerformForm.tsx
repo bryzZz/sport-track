@@ -11,7 +11,6 @@ type WorkoutPerformFormProps = {
   defaultValues: WorkoutPerformFormValues;
   onSubmit: (values: WorkoutPerformFormValues) => Promise<void> | void;
   draftStorageKey: string;
-  isSubmitting?: boolean;
 };
 
 type WorkoutPerformDraft = {

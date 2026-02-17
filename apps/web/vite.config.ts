@@ -13,6 +13,7 @@ export default defineConfig({
       pages: fileURLToPath(new URL("./src/pages", import.meta.url)),
       constants: fileURLToPath(new URL("./src/constants.ts", import.meta.url)),
       api: fileURLToPath(new URL("./src/api", import.meta.url)),
+      utils: fileURLToPath(new URL("./src/utils", import.meta.url)),
     },
   },
 });

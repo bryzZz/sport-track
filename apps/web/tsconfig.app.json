@@ -14,7 +14,8 @@
       "pages/*": ["./src/pages/*"],
       "constants": ["./src/constants.ts"],
       "constants/*": ["./src/constants/*"],
-      "api/*": ["./src/api/*"]
+      "api/*": ["./src/api/*"],
+      "utils/*": ["./src/utils/*"]
     },
 
     /* Bundler mode */

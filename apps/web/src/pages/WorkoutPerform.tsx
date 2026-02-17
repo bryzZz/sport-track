@@ -1,12 +1,12 @@
-import { useEffect } from "react";
 import { useSearchParams } from "react-router";
+
+import { useApiKeepAliveOnFocus } from "utils/hooks/useApiKeepAliveOnFocus";
 
 import {
   WorkoutPerformForm,
   type WorkoutPerformFormValues,
 } from "components/WorkoutPerformForm";
 
-import { api } from "../api/api";
 import {
   type CreateWorkoutSessionPayload,
   useCreateWorkoutSession,
@@ -53,13 +53,9 @@ export const WorkoutPerform: React.FC = () => {
     isPending: isCreatingWorkoutSession,
   } = useCreateWorkoutSession();
 
-  useEffect(() => {
-    if (!templateId) {
-      return;
-    }
-
-    void api.get("/health").catch(() => undefined);
-  }, [templateId]);
+  useApiKeepAliveOnFocus({
+    enabled: !!templateId,
+  });
 
   if (!templateId) {
     return (
