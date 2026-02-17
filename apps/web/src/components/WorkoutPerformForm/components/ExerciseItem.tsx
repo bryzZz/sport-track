@@ -10,7 +10,7 @@ import { Sets } from "./Sets";
 
 type ExerciseItemProps = {
   index: number;
-  planExercise?: WorkoutPerformTemplateExercise;
+  planExercise: WorkoutPerformTemplateExercise;
 };
 
 export const ExerciseItem: React.FC<ExerciseItemProps> = ({
@@ -20,17 +20,16 @@ export const ExerciseItem: React.FC<ExerciseItemProps> = ({
   const { control, register, setValue } =
     useFormContext<WorkoutPerformFormValues>();
 
-  const exerciseTypeId =
-    useWatch({
-      control,
-      name: `exercises.${index}.exerciseTypeId`,
-    }) ??
-    planExercise?.exerciseTypeId ??
-    "";
+  const exerciseTypeId = useWatch({
+    control,
+    name: `exercises.${index}.exerciseTypeId`,
+  });
 
   const exerciseName =
-    planExercise?.exerciseType.name ??
-    (exerciseTypeId ? `Упражнение ${exerciseTypeId}` : "Неизвестное упражнение");
+    planExercise.exerciseType.name ??
+    (exerciseTypeId
+      ? `Упражнение ${exerciseTypeId}`
+      : "Неизвестное упражнение");
 
   const sets =
     useWatch({
@@ -85,7 +84,7 @@ export const ExerciseItem: React.FC<ExerciseItemProps> = ({
             </div>
           </div>
 
-          <Sets exerciseIndex={index} planSets={planExercise?.sets ?? []} />
+          <Sets exerciseIndex={index} planSets={planExercise.sets} />
         </div>
       </div>
     </div>

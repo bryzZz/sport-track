@@ -9,7 +9,7 @@ import type {
 type SetItemProps = {
   exerciseIndex: number;
   index: number;
-  planSet?: WorkoutPerformTemplateExercise["sets"][number];
+  planSet: WorkoutPerformTemplateExercise["sets"][number];
   onRemove: (index: number) => void;
 };
 
@@ -28,11 +28,9 @@ export const SetItem: React.FC<SetItemProps> = ({
     }) ?? undefined;
 
   const hasPartialReps = partialReps !== undefined;
-  const planText = planSet
-    ? `${planSet.weight}кг x ${planSet.reps}${
-        planSet.partialReps !== null ? ` | ${planSet.partialReps}` : ""
-      }`
-    : "-";
+  const planText = `${planSet.weight}кг x ${planSet.reps}${
+    planSet.partialReps !== null ? ` | ${planSet.partialReps}` : ""
+  }`;
 
   return (
     <div className="grid grid-cols-[40px_1fr_90px_90px_48px] items-center gap-2">
