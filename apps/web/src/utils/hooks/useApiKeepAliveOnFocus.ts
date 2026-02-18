@@ -7,7 +7,7 @@ type UseApiKeepAliveOnFocusOptions = {
   intervalMs?: number;
 };
 
-const DEFAULT_KEEP_ALIVE_INTERVAL_MS = 0.5 * 60 * 1000;
+const DEFAULT_KEEP_ALIVE_INTERVAL_MS = 5 * 60 * 1000;
 
 export const useApiKeepAliveOnFocus = ({
   enabled = true,
