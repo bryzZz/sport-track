@@ -8,8 +8,12 @@ export const useGetWorkoutOverviewStats = (
   dateRange?: StatsDateRange,
 ) => {
   return useQuery({
-    queryKey: ["stats-workout-overview", templateId, dateRange?.from, dateRange?.to],
+    queryKey: [
+      "stats-workout-overview",
+      templateId,
+      dateRange?.from,
+      dateRange?.to,
+    ],
     queryFn: () => getWorkoutOverviewStats(templateId, dateRange),
-    enabled: Boolean(templateId),
   });
 };

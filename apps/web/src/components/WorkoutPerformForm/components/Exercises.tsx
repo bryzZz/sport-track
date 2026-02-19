@@ -1,15 +1,14 @@
 import React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
-import type {
-  WorkoutPerformFormValues,
-  WorkoutPerformTemplate,
-} from "../types";
+import type { WorkoutTemplate } from "api/workout-templates";
+
+import type { WorkoutPerformFormValues } from "../types";
 
 import { ExerciseItem } from "./ExerciseItem";
 
 type ExercisesProps = {
-  template: WorkoutPerformTemplate;
+  template: WorkoutTemplate;
 };
 
 export const Exercises: React.FC<ExercisesProps> = ({ template }) => {

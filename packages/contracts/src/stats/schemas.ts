@@ -64,3 +64,7 @@ export const workoutOverviewResponseSchema = z.object({
   }),
   exercises: z.array(workoutOverviewExerciseSchema),
 });
+
+type WorkoutOverviewQuery = z.infer<typeof workoutOverviewQuerySchema>;
+export type StatsDateRange = Pick<WorkoutOverviewQuery, "from" | "to">;
+export type WorkoutOverviewStats = z.infer<typeof workoutOverviewResponseSchema>;

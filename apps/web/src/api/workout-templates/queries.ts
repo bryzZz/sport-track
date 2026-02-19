@@ -30,7 +30,6 @@ export const useGetWorkoutTemplate = (
   return useQuery({
     queryKey: ["workout-template", templateId],
     queryFn: () => getWorkoutTemplate(templateId),
-    enabled: Boolean(templateId),
     ...options,
   });
 };

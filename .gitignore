@@ -11,6 +11,9 @@ node_modules
 dist
 dist-ssr
 *.local
+packages/contracts/src/**/*.js
+packages/contracts/src/**/*.d.ts
+packages/contracts/src/**/*.d.ts.map
 
 # Editor directories and files
 .vscode/*

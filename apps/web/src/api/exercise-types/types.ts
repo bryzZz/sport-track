@@ -1,5 +1,1 @@
-export type ExerciseType = {
-  id: string;
-  name: string;
-  createdAt: string;
-};
+export type { ExerciseType } from "@sport-track/contracts";

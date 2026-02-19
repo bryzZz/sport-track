@@ -1,49 +1,5 @@
-export type WorkoutTemplateExerciseType = {
-  id: string;
-  name: string;
-  createdAt: string;
-};
-
-export type WorkoutTemplateSet = {
-  id: string;
-  orderIndex: number;
-  reps: number;
-  partialReps: number | null;
-  weight: string;
-};
-
-export type WorkoutTemplateExercise = {
-  id: string;
-  templateId: string;
-  exerciseTypeId: string;
-  orderIndex: number;
-  comment: string | null;
-  exerciseType: WorkoutTemplateExerciseType;
-  sets: WorkoutTemplateSet[];
-};
-
-export type WorkoutTemplate = {
-  id: string;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-  exercises: WorkoutTemplateExercise[];
-};
-
-export type WorkoutTemplateSetPayload = {
-  reps: number;
-  partialReps?: number;
-  weight: number;
-};
-
-export type WorkoutTemplateExercisePayload = {
-  exerciseTypeId: string;
-  orderIndex: number;
-  comment?: string;
-  sets: WorkoutTemplateSetPayload[];
-};
-
-export type UpsertWorkoutTemplatePayload = {
-  name: string;
-  exercises: WorkoutTemplateExercisePayload[];
-};
+export type {
+  UpsertWorkoutTemplatePayload,
+  WeightUnit,
+  WorkoutTemplate,
+} from "@sport-track/contracts";

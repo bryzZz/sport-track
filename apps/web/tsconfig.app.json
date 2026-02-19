@@ -12,10 +12,9 @@
       "assets/*": ["./src/assets/*"],
       "components/*": ["./src/components/*"],
       "pages/*": ["./src/pages/*"],
-      "constants": ["./src/constants.ts"],
-      "constants/*": ["./src/constants/*"],
       "api/*": ["./src/api/*"],
-      "utils/*": ["./src/utils/*"]
+      "utils/*": ["./src/utils/*"],
+      "@sport-track/contracts": ["../../packages/contracts/src/index.ts"]
     },
 
     /* Bundler mode */

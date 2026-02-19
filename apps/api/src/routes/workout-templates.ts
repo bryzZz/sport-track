@@ -1,8 +1,8 @@
 import type { FastifyPluginAsync } from "fastify";
 import type { Prisma } from "@prisma/client";
+import { createWorkoutTemplateSchema } from "@sport-track/contracts";
 
 import { prisma } from "../lib/prisma.js";
-import { createWorkoutTemplateSchema } from "../modules/workout-templates/schemas.js";
 
 export const workoutTemplatesRoutes: FastifyPluginAsync = async (app) => {
   app.get("/", async () => {
@@ -86,6 +86,7 @@ export const workoutTemplatesRoutes: FastifyPluginAsync = async (app) => {
           exerciseTypeId: exercise.exerciseTypeId,
           orderIndex: exercise.orderIndex,
           comment: exercise.comment,
+          weightUnit: exercise.weightUnit,
         }));
 
       const createdExercises =
@@ -209,6 +210,7 @@ export const workoutTemplatesRoutes: FastifyPluginAsync = async (app) => {
           exerciseTypeId: exercise.exerciseTypeId,
           orderIndex: exercise.orderIndex,
           comment: exercise.comment,
+          weightUnit: exercise.weightUnit,
         }));
 
       const createdExercises =

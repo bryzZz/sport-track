@@ -1,16 +1,23 @@
 import React from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 
-import type {
-  WorkoutPerformFormValues,
-  WorkoutPerformTemplateExercise,
-} from "../types";
+import type { WeightUnit, WorkoutTemplate } from "api/workout-templates";
+
+import type { WorkoutPerformFormValues } from "../types";
 
 import { Sets } from "./Sets";
 
 type ExerciseItemProps = {
   index: number;
-  planExercise: WorkoutPerformTemplateExercise;
+  planExercise: WorkoutTemplate["exercises"][number];
+};
+
+const convertWeight = (value: number, from: WeightUnit, to: WeightUnit) => {
+  const KG_TO_LBS = 2.2046226218;
+  const converted =
+    from === "KG" && to === "LBS" ? value * KG_TO_LBS : value / KG_TO_LBS;
+
+  return Math.round(converted / 0.25) * 0.25;
 };
 
 export const ExerciseItem: React.FC<ExerciseItemProps> = ({
@@ -20,22 +27,18 @@ export const ExerciseItem: React.FC<ExerciseItemProps> = ({
   const { control, register, setValue } =
     useFormContext<WorkoutPerformFormValues>();
 
-  const exerciseTypeId = useWatch({
+  const currentWeightUnit = useWatch({
     control,
-    name: `exercises.${index}.exerciseTypeId`,
+    name: `exercises.${index}.template.weightUnit`,
   });
-
-  const exerciseName =
-    planExercise.exerciseType.name ??
-    (exerciseTypeId
-      ? `Упражнение ${exerciseTypeId}`
-      : "Неизвестное упражнение");
-
-  const sets =
-    useWatch({
-      control,
-      name: `exercises.${index}.sets`,
-    }) ?? [];
+  const templateSets = useWatch({
+    control,
+    name: `exercises.${index}.template.sets`,
+  });
+  const sets = useWatch({
+    control,
+    name: `exercises.${index}.sets`,
+  });
 
   const isAllCompleted =
     sets.length > 0 && sets.every((setItem) => setItem.isCompleted);
@@ -55,15 +58,49 @@ export const ExerciseItem: React.FC<ExerciseItemProps> = ({
     }
   };
 
+  const handleToggleWeightUnit = () => {
+    const nextWeightUnit = currentWeightUnit === "KG" ? "LBS" : "KG";
+
+    sets.forEach((setItem, setIndex) => {
+      const convertedWeight = convertWeight(
+        setItem.weight,
+        currentWeightUnit,
+        nextWeightUnit,
+      );
+
+      setValue(`exercises.${index}.sets.${setIndex}.weight`, convertedWeight, {
+        shouldDirty: true,
+      });
+    });
+
+    templateSets.forEach((setItem, setIndex) => {
+      const convertedWeight = convertWeight(
+        Number(setItem.weight),
+        currentWeightUnit,
+        nextWeightUnit,
+      );
+
+      setValue(
+        `exercises.${index}.template.sets.${setIndex}.weight`,
+        convertedWeight,
+        { shouldDirty: true },
+      );
+    });
+
+    setValue(`exercises.${index}.template.weightUnit`, nextWeightUnit, {
+      shouldDirty: true,
+    });
+  };
+
   return (
     <div className="border-b pb-3">
       <div className="mb-3 flex flex-col gap-1">
-        <h2 className="text-2xl">{exerciseName}</h2>
+        <h2 className="text-2xl">{planExercise.exerciseType.name}</h2>
         <textarea
           className="w-full rounded border px-3 py-2 text-sm"
           rows={2}
           placeholder="Комментарий к упражнению"
-          {...register(`exercises.${index}.comment`)}
+          {...register(`exercises.${index}.template.comment`)}
         />
       </div>
 
@@ -72,7 +109,13 @@ export const ExerciseItem: React.FC<ExerciseItemProps> = ({
           <div className="grid grid-cols-[40px_1fr_90px_90px_48px] gap-2">
             <div className="py-1 text-center font-medium">Set</div>
             <div className="py-1 text-center font-medium">Plan</div>
-            <div className="py-1 text-center font-medium">Kg</div>
+            <button
+              className="cursor-pointer py-1 text-center font-medium"
+              type="button"
+              onClick={handleToggleWeightUnit}
+            >
+              {currentWeightUnit}
+            </button>
             <div className="py-1 text-center font-medium">Reps</div>
             <div className="flex items-center justify-center">
               <input
@@ -84,7 +127,11 @@ export const ExerciseItem: React.FC<ExerciseItemProps> = ({
             </div>
           </div>
 
-          <Sets exerciseIndex={index} planSets={planExercise.sets} />
+          <Sets
+            exerciseIndex={index}
+            planSets={templateSets}
+            weightUnit={currentWeightUnit}
+          />
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import type { WorkoutTemplate } from "../../api/workout-templates";
+import type { WeightUnit } from "../../api/workout-templates";
 
 export type WorkoutPerformSetValues = {
   reps: number;
@@ -7,10 +7,28 @@ export type WorkoutPerformSetValues = {
   isCompleted: boolean;
 };
 
-export type WorkoutPerformExerciseValues = {
-  exerciseTypeId: string;
-  templateExerciseId: string;
+export type WorkoutPerformTemplateSetValues = {
+  orderIndex: number;
+  reps: number;
+  partialReps?: number;
+  weight: number;
+};
+
+export type WorkoutPerformTemplateValues = {
   comment: string;
+  weightUnit: WeightUnit;
+  sets: WorkoutPerformTemplateSetValues[];
+};
+
+export type WorkoutPerformPlanSet = {
+  reps: number;
+  partialReps: number | null;
+  weight: number;
+};
+
+export type WorkoutPerformExerciseValues = {
+  templateExerciseId: string;
+  template: WorkoutPerformTemplateValues;
   sets: WorkoutPerformSetValues[];
 };
 
@@ -18,7 +36,3 @@ export type WorkoutPerformFormValues = {
   rpe: number;
   exercises: WorkoutPerformExerciseValues[];
 };
-
-export type WorkoutPerformTemplate = WorkoutTemplate;
-export type WorkoutPerformTemplateExercise =
-  WorkoutPerformTemplate["exercises"][number];

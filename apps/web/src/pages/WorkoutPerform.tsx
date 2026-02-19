@@ -10,6 +10,7 @@ import {
 import {
   type CreateWorkoutSessionPayload,
   useCreateWorkoutSession,
+  type WorkoutSessionTemplateUpdateExercisePayload,
 } from "../api/workout-sessions";
 import {
   useGetWorkoutTemplate,
@@ -21,20 +22,29 @@ const createInitialValues = (
 ): WorkoutPerformFormValues => ({
   rpe: 7,
   exercises: template.exercises.map((exercise) => ({
-    exerciseTypeId: exercise.exerciseTypeId,
     templateExerciseId: exercise.id,
-    comment: exercise.comment ?? "",
     sets: exercise.sets.map((set) => ({
       reps: set.reps,
       partialReps: set.partialReps ?? undefined,
       weight: Number(set.weight),
       isCompleted: false,
     })),
+    template: {
+      comment: exercise.comment ?? "",
+      weightUnit: exercise.weightUnit,
+      sets: exercise.sets.map((set) => ({
+        orderIndex: set.orderIndex,
+        reps: set.reps,
+        partialReps: set.partialReps ?? undefined,
+        weight: Number(set.weight),
+      })),
+    },
   })),
 });
 
-const createDraftStorageKey = (templateId: string) =>
-  `workout-perform:draft:v1:${templateId}`;
+const normalizeComment = (comment: string | null | undefined) => {
+  return comment?.trim() || undefined;
+};
 
 export const WorkoutPerform: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -85,22 +95,43 @@ export const WorkoutPerform: React.FC = () => {
   }
 
   const initialValues = createInitialValues(template);
-  const draftStorageKey = createDraftStorageKey(template.id);
 
   const handleSubmit = async (values: WorkoutPerformFormValues) => {
     if (isCreatingWorkoutSession) {
-      return;
+      return false;
     }
+
+    const changedTemplateExercises: WorkoutSessionTemplateUpdateExercisePayload[] =
+      values.exercises.flatMap((exercise, exerciseIndex) => {
+        const templateExercise = template.exercises[exerciseIndex];
+
+        const nextComment = normalizeComment(exercise.template.comment);
+        const currentComment = normalizeComment(templateExercise.comment);
+        const isCommentChanged = nextComment !== currentComment;
+        const isWeightUnitChanged =
+          exercise.template.weightUnit !== templateExercise.weightUnit;
+
+        if (!isCommentChanged && !isWeightUnitChanged) {
+          return [];
+        }
+
+        return {
+          id: exercise.templateExerciseId,
+          weightUnit: exercise.template.weightUnit,
+          sets: exercise.template.sets,
+          comment: nextComment,
+        };
+      });
 
     const payload: CreateWorkoutSessionPayload = {
       templateId: template.id,
       rpe: values.rpe,
       performedAt: new Date().toISOString(),
       exercises: values.exercises.map((exercise, exerciseIndex) => ({
-        exerciseTypeId: exercise.exerciseTypeId,
         templateExerciseId: exercise.templateExerciseId,
         orderIndex: exerciseIndex,
-        comment: exercise.comment.trim() || undefined,
+        weightUnit: exercise.template.weightUnit,
+        comment: normalizeComment(exercise.template.comment),
         sets: exercise.sets.map((set) => ({
           reps: set.reps,
           partialReps: set.partialReps,
@@ -108,18 +139,24 @@ export const WorkoutPerform: React.FC = () => {
           isCompleted: set.isCompleted,
         })),
       })),
+      templateUpdates: {
+        exercises: changedTemplateExercises,
+      },
     };
 
     try {
       await createWorkoutSession(payload);
-      window.localStorage.removeItem(draftStorageKey);
 
       window.alert("Тренировка сохранена.");
       window.history.back();
+
+      return true;
     } catch {
       window.alert(
         "Не удалось сохранить тренировку. Проверь соединение и попробуй снова. Черновик сохранен локально.",
       );
+
+      return false;
     }
   };
 
@@ -140,7 +177,6 @@ export const WorkoutPerform: React.FC = () => {
         template={template}
         defaultValues={initialValues}
         onSubmit={handleSubmit}
-        draftStorageKey={draftStorageKey}
       />
     </div>
   );

@@ -25,6 +25,7 @@ export const Exercises: React.FC = () => {
 
     append({
       exerciseTypeId: "",
+      weightUnit: "KG",
       sets: [{ reps: 10, weight: 10 }],
       comment: "",
     });

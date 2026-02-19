@@ -19,6 +19,7 @@ const createInitialValues = (
   name: template.name,
   exercises: template.exercises.map((exercise) => ({
     exerciseTypeId: exercise.exerciseTypeId,
+    weightUnit: exercise.weightUnit,
     comment: exercise.comment ?? "",
     sets: exercise.sets.map((setItem) => ({
       reps: setItem.reps,
@@ -69,6 +70,7 @@ export const EditWorkoutTemplate: React.FC = () => {
       exercises: values.exercises.map((exercise, exerciseIndex) => ({
         exerciseTypeId: exercise.exerciseTypeId,
         orderIndex: exerciseIndex,
+        weightUnit: exercise.weightUnit,
         comment:
           exercise.comment.trim().length > 0 ? exercise.comment.trim() : undefined,
         sets: exercise.sets.map((setItem) => ({

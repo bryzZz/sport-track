@@ -1,19 +1,26 @@
 import React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
+import type { WeightUnit } from "api/workout-templates";
+
 import type {
   WorkoutPerformFormValues,
-  WorkoutPerformTemplateExercise,
+  WorkoutPerformTemplateSetValues,
 } from "../types";
 
 import { SetItem } from "./SetItem";
 
 type SetsProps = {
   exerciseIndex: number;
-  planSets: WorkoutPerformTemplateExercise["sets"];
+  planSets: WorkoutPerformTemplateSetValues[];
+  weightUnit: WeightUnit;
 };
 
-export const Sets: React.FC<SetsProps> = ({ exerciseIndex, planSets }) => {
+export const Sets: React.FC<SetsProps> = ({
+  exerciseIndex,
+  planSets,
+  weightUnit,
+}) => {
   const { control } = useFormContext<WorkoutPerformFormValues>();
 
   const { fields, append, remove } = useFieldArray({
@@ -53,6 +60,7 @@ export const Sets: React.FC<SetsProps> = ({ exerciseIndex, planSets }) => {
           index={index}
           planSet={planSets[index]}
           onRemove={handleRemoveSet}
+          weightUnit={weightUnit}
         />
       ))}
 

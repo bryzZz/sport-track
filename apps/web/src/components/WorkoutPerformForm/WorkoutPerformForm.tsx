@@ -1,156 +1,51 @@
-import { useEffect, useRef, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider } from "react-hook-form";
 
-import { format, isValid } from "date-fns";
+import type { WorkoutTemplate } from "api/workout-templates";
+import { format } from "date-fns";
+import { useFormWithDraft } from "utils/hooks/useFormDraft";
 
 import { Exercises } from "./components/Exercises";
-import type { WorkoutPerformFormValues, WorkoutPerformTemplate } from "./types";
+import type { WorkoutPerformFormValues } from "./types";
 
 type WorkoutPerformFormProps = {
-  template: WorkoutPerformTemplate;
+  template: WorkoutTemplate;
   defaultValues: WorkoutPerformFormValues;
-  onSubmit: (values: WorkoutPerformFormValues) => Promise<void> | void;
-  draftStorageKey: string;
-};
-
-type WorkoutPerformDraft = {
-  version: number;
-  values: WorkoutPerformFormValues;
-  updatedAt: string;
-};
-
-const DRAFT_VERSION = 1;
-const DRAFT_SAVE_DELAY_MS = 400;
-
-const isValidDraft = (value: unknown): value is WorkoutPerformDraft => {
-  if (!value || typeof value !== "object") {
-    return false;
-  }
-
-  const candidate = value as Partial<WorkoutPerformDraft>;
-
-  if (candidate.version !== DRAFT_VERSION) {
-    return false;
-  }
-
-  if (!candidate.values || typeof candidate.values !== "object") {
-    return false;
-  }
-
-  if (typeof candidate.values.rpe !== "number") {
-    return false;
-  }
-
-  if (!Array.isArray(candidate.values.exercises)) {
-    return false;
-  }
-
-  return true;
-};
-
-const formatDraftTime = (value: string | null) => {
-  if (!value) {
-    return "";
-  }
-
-  const date = new Date(value);
-
-  if (!isValid(date)) {
-    return "";
-  }
-
-  return format(date, "HH:mm:ss");
+  onSubmit: (values: WorkoutPerformFormValues) => Promise<boolean> | boolean;
 };
 
 export const WorkoutPerformForm = ({
   template,
   defaultValues,
   onSubmit,
-  draftStorageKey,
 }: WorkoutPerformFormProps) => {
-  const methods = useForm<WorkoutPerformFormValues>({
-    defaultValues,
-  });
+  const { clearDraft, methods, restoredDraftAt, savedDraftAt } =
+    useFormWithDraft<WorkoutPerformFormValues>({
+      storageKey: `workout-perform:draft:v3:${template.id}`,
+      defaultValues,
+    });
 
   const {
     formState: { isSubmitting },
-    getValues,
     handleSubmit,
     register,
-    reset,
-    watch,
   } = methods;
-  const hasRestoredDraftRef = useRef(false);
-  const saveDraftTimeoutRef = useRef<number | null>(null);
-  const [restoredDraftAt, setRestoredDraftAt] = useState<string | null>(null);
-  const [savedDraftAt, setSavedDraftAt] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (hasRestoredDraftRef.current) {
+  const handleFormSubmit = async (values: WorkoutPerformFormValues) => {
+    const isSuccess = await onSubmit(values);
+
+    if (!isSuccess) {
       return;
     }
 
-    hasRestoredDraftRef.current = true;
-
-    try {
-      const draftRaw = window.localStorage.getItem(draftStorageKey);
-
-      if (!draftRaw) {
-        return;
-      }
-
-      const parsedDraft: unknown = JSON.parse(draftRaw);
-
-      if (!isValidDraft(parsedDraft)) {
-        window.localStorage.removeItem(draftStorageKey);
-        return;
-      }
-
-      reset(parsedDraft.values);
-      setRestoredDraftAt(parsedDraft.updatedAt);
-      setSavedDraftAt(parsedDraft.updatedAt);
-    } catch {
-      window.localStorage.removeItem(draftStorageKey);
-    }
-  }, [draftStorageKey, reset]);
-
-  useEffect(() => {
-    const subscription = watch(() => {
-      if (saveDraftTimeoutRef.current) {
-        window.clearTimeout(saveDraftTimeoutRef.current);
-      }
-
-      saveDraftTimeoutRef.current = window.setTimeout(() => {
-        const currentFormValues = getValues();
-        const draft: WorkoutPerformDraft = {
-          version: DRAFT_VERSION,
-          values: currentFormValues,
-          updatedAt: new Date().toISOString(),
-        };
-
-        try {
-          window.localStorage.setItem(draftStorageKey, JSON.stringify(draft));
-          setSavedDraftAt(draft.updatedAt);
-        } catch {
-          // ignore localStorage write errors in MVP
-        }
-      }, DRAFT_SAVE_DELAY_MS);
-    });
-
-    return () => {
-      if (saveDraftTimeoutRef.current) {
-        window.clearTimeout(saveDraftTimeoutRef.current);
-      }
-      subscription.unsubscribe();
-    };
-  }, [draftStorageKey, getValues, watch]);
-
-  const restoredDraftTime = formatDraftTime(restoredDraftAt);
-  const savedDraftTime = formatDraftTime(savedDraftAt);
+    clearDraft();
+  };
 
   return (
     <FormProvider {...methods}>
-      <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
+      <form
+        className="flex flex-col gap-6"
+        onSubmit={handleSubmit(handleFormSubmit)}
+      >
         <fieldset className="flex flex-col gap-6" disabled={isSubmitting}>
           <Exercises template={template} />
 
@@ -175,15 +70,15 @@ export const WorkoutPerformForm = ({
         </fieldset>
 
         <div>
-          {restoredDraftTime && (
+          {restoredDraftAt && (
             <p className="text-sm text-slate-500">
-              Черновик восстановлен в {restoredDraftTime}
+              Черновик восстановлен в {format(restoredDraftAt, "HH:mm:ss")}
             </p>
           )}
 
-          {savedDraftTime && (
+          {savedDraftAt && (
             <p className="text-sm text-slate-500">
-              Черновик сохранен в {savedDraftTime}
+              Черновик сохранен в {format(savedDraftAt, "HH:mm:ss")}
             </p>
           )}
         </div>

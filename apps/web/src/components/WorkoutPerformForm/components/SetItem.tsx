@@ -1,16 +1,19 @@
 import React from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 
+import type { WeightUnit } from "api/workout-templates";
+
 import type {
   WorkoutPerformFormValues,
-  WorkoutPerformTemplateExercise,
+  WorkoutPerformTemplateSetValues,
 } from "../types";
 
 type SetItemProps = {
   exerciseIndex: number;
   index: number;
-  planSet: WorkoutPerformTemplateExercise["sets"][number];
+  planSet?: WorkoutPerformTemplateSetValues;
   onRemove: (index: number) => void;
+  weightUnit: WeightUnit;
 };
 
 export const SetItem: React.FC<SetItemProps> = ({
@@ -18,6 +21,7 @@ export const SetItem: React.FC<SetItemProps> = ({
   index,
   planSet,
   onRemove,
+  weightUnit,
 }) => {
   const { control, register } = useFormContext<WorkoutPerformFormValues>();
 
@@ -28,9 +32,11 @@ export const SetItem: React.FC<SetItemProps> = ({
     }) ?? undefined;
 
   const hasPartialReps = partialReps !== undefined;
-  const planText = `${planSet.weight}кг x ${planSet.reps}${
-    planSet.partialReps !== null ? ` | ${planSet.partialReps}` : ""
-  }`;
+  const planText = planSet
+    ? `${planSet.weight}${weightUnit.toLowerCase()} x ${planSet.reps}${
+        planSet.partialReps !== undefined ? ` | ${planSet.partialReps}` : ""
+      }`
+    : "-";
 
   return (
     <div className="grid grid-cols-[40px_1fr_90px_90px_48px] items-center gap-2">
@@ -38,7 +44,6 @@ export const SetItem: React.FC<SetItemProps> = ({
         <button
           className="size-7 cursor-pointer rounded-full border text-center"
           type="button"
-          aria-label={`Удалить подход ${index + 1}`}
           onClick={() => onRemove(index)}
         >
           {index + 1}

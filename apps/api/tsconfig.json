@@ -9,8 +9,10 @@
     "noUnusedParameters": true,
     "skipLibCheck": true,
     "verbatimModuleSyntax": true,
-    "outDir": "dist",
-    "rootDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "@sport-track/contracts": ["../../packages/contracts/src/index.ts"]
+    },
     "types": ["node"]
   },
   "include": ["src", "prisma/**/*.ts"]

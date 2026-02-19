@@ -1,6 +1,8 @@
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
+import type { WeightUnit } from "api/workout-templates";
+
 import { Exercises } from "./components/Exercises";
 
 export type WorkoutTemplateFormSetValues = {
@@ -11,6 +13,7 @@ export type WorkoutTemplateFormSetValues = {
 
 export type WorkoutTemplateFormExerciseValues = {
   exerciseTypeId: string;
+  weightUnit: WeightUnit;
   comment: string;
   sets: WorkoutTemplateFormSetValues[];
 };

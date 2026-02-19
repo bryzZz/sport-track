@@ -2,7 +2,28 @@ import React from "react";
 
 import { format, isValid, parseISO } from "date-fns";
 
-import { workoutData } from "constants";
+const workoutData = [
+  { date: "2026-01-02", done: true, intensity: 6 },
+  { date: "2026-01-05", done: false, intensity: 0 },
+  { date: "2026-01-08", done: true, intensity: 6 },
+  { date: "2026-01-12", done: true, intensity: 8 },
+  { date: "2026-01-15", done: true, intensity: 4 },
+  { date: "2026-01-18", done: true, intensity: 7 },
+  { date: "2026-01-21", done: true, intensity: 8 },
+  { date: "2026-01-24", done: true, intensity: 8 },
+  { date: "2026-01-27", done: false, intensity: 4 },
+  { date: "2026-01-30", done: true, intensity: 4 },
+  { date: "2026-02-02", done: true, intensity: 7 },
+  { date: "2026-02-05", done: true, intensity: 7 },
+  { date: "2026-02-08", done: true, intensity: 8 },
+  { date: "2026-02-12", done: true, intensity: 8 },
+  { date: "2026-02-15", done: true, intensity: 4 },
+  { date: "2026-02-18", done: true, intensity: 7 },
+  { date: "2026-02-21", done: true, intensity: 8 },
+  { date: "2026-02-24", done: true, intensity: 8 },
+  { date: "2026-02-27", done: true, intensity: 4 },
+  { date: "2026-02-30", done: true, intensity: 7 },
+];
 
 const intensityClasses = [
   "bg-neutral-200/40",
