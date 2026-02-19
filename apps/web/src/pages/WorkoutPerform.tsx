@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 
 import { useApiKeepAliveOnFocus } from "utils/hooks/useApiKeepAliveOnFocus";
 
@@ -163,14 +163,15 @@ export const WorkoutPerform: React.FC = () => {
   return (
     <div>
       <div className="mb-6 flex items-center gap-4">
-        <button
-          className="cursor-pointer rounded border px-6 py-2"
-          type="button"
-          onClick={() => window.history.back()}
-        >
-          Back
-        </button>
-        <h1 className="text-4xl">{template.name} Perform</h1>
+        <Link to="/">
+          <button
+            className="cursor-pointer rounded border px-6 py-2"
+            type="button"
+          >
+            Back
+          </button>
+        </Link>
+        <h1 className="text-3xl">{template.name} Perform</h1>
       </div>
 
       <WorkoutPerformForm

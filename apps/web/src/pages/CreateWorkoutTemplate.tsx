@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router";
 
 import {
   WorkoutTemplateForm,
@@ -26,7 +27,9 @@ export const CreateWorkoutTemplate: React.FC = () => {
         orderIndex: exerciseIndex,
         weightUnit: exercise.weightUnit,
         comment:
-          exercise.comment.trim().length > 0 ? exercise.comment.trim() : undefined,
+          exercise.comment.trim().length > 0
+            ? exercise.comment.trim()
+            : undefined,
         sets: exercise.sets.map((setItem) => ({
           reps: setItem.reps,
           partialReps: setItem.partialReps,
@@ -43,7 +46,17 @@ export const CreateWorkoutTemplate: React.FC = () => {
 
   return (
     <div>
-      <h1 className="mb-6 text-4xl">Create Workout Template</h1>
+      <div className="mb-6 flex items-center gap-4">
+        <Link to="/">
+          <button
+            className="cursor-pointer rounded border px-6 py-2"
+            type="button"
+          >
+            Back
+          </button>
+        </Link>
+        <h1 className="text-3xl">Create Workout Template</h1>
+      </div>
 
       <WorkoutTemplateForm
         defaultValues={defaultValues}

@@ -1,5 +1,5 @@
 import React from "react";
-import { useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 
 import { useGetWorkoutOverviewStats } from "api/stats";
 
@@ -26,7 +26,17 @@ export const WorkoutStats: React.FC = () => {
 
   return (
     <div>
-      <h1 className="mb-6 text-4xl">{data.template.name} Workout Stats</h1>
+      <div className="mb-6 flex items-center gap-4">
+        <Link to="/">
+          <button
+            className="cursor-pointer rounded border px-6 py-2"
+            type="button"
+          >
+            Back
+          </button>
+        </Link>
+        <h1 className="text-3xl">{data.template.name} Workout Stats</h1>
+      </div>
 
       <div className="flex flex-col gap-4">
         <div>
@@ -43,11 +53,14 @@ export const WorkoutStats: React.FC = () => {
             {data.summary.totalVolume.unit}
           </p>
           {data.summary.totalVolume.trend.deltaPercent === null ? (
-            <p className="text-neutral-500">Нет данных для тренда за 4 недели</p>
+            <p className="text-neutral-500">
+              Нет данных для тренда за 4 недели
+            </p>
           ) : (
             <p className="text-lime-600">
               {data.summary.totalVolume.trend.deltaPercent >= 0 ? "↑" : "↓"}{" "}
-              {Math.abs(data.summary.totalVolume.trend.deltaPercent)}% за 4 недели
+              {Math.abs(data.summary.totalVolume.trend.deltaPercent)}% за 4
+              недели
             </p>
           )}
         </div>
