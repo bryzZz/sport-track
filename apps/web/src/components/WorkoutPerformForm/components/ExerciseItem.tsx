@@ -96,15 +96,9 @@ export const ExerciseItem: React.FC<ExerciseItemProps> = ({
     <div className="border-b pb-3">
       <div className="mb-3 flex flex-col gap-1">
         <h2 className="text-2xl">{planExercise.exerciseType.name}</h2>
-        <textarea
-          className="w-full rounded border px-3 py-2 text-sm"
-          rows={2}
-          placeholder="Комментарий к упражнению"
-          {...register(`exercises.${index}.template.comment`)}
-        />
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="mb-3 flex flex-col gap-4">
         <div className="flex flex-col gap-2 text-sm">
           <div className="grid grid-cols-[40px_1fr_90px_90px_48px] gap-2">
             <div className="py-1 text-center font-medium">Set</div>
@@ -134,6 +128,13 @@ export const ExerciseItem: React.FC<ExerciseItemProps> = ({
           />
         </div>
       </div>
+
+      <textarea
+        className="w-full rounded-md border px-3 py-2 text-sm"
+        rows={2}
+        placeholder="Комментарий к упражнению"
+        {...register(`exercises.${index}.template.comment`)}
+      />
     </div>
   );
 };

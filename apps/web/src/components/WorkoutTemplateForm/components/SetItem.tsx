@@ -14,48 +14,35 @@ export const SetItem: React.FC<SetItemProps> = (props) => {
   const { register } = useFormContext<WorkoutTemplateFormValues>();
 
   return (
-    <div className="rounded border border-zinc-700 p-2">
-      <div className="mb-2 flex items-center justify-between">
-        <span>{index + 1}.</span>
+    <div className="grid grid-cols-[40px_90px_140px] items-center gap-2">
+      <div className="flex items-center justify-center">
         <button
-          className="cursor-pointer rounded border px-2 py-1 text-sm"
+          className="size-7 cursor-pointer rounded-full border text-center"
           type="button"
           onClick={onRemove}
         >
-          Remove Set
+          {index + 1}
         </button>
       </div>
 
-      <div className="grid grid-cols-3 gap-2">
+      <div>
         <input
-          className="w-full rounded border border-zinc-600 bg-transparent px-2 py-1"
-          type="number"
-          min={0}
-          step={0.5}
-          placeholder="Вес"
+          className="w-full rounded-md border px-3 py-1.5 text-center outline-black"
+          type="text"
+          inputMode="numeric"
           {...register(`exercises.${exerciseIndex}.sets.${index}.weight`, {
             valueAsNumber: true,
           })}
         />
+      </div>
 
+      <div>
         <input
-          className="w-full rounded border border-zinc-600 bg-transparent px-2 py-1"
-          type="number"
-          min={1}
-          placeholder="Повторы"
+          className="w-full rounded-md border px-3 py-1.5 text-center outline-black"
+          type="text"
+          inputMode="numeric"
           {...register(`exercises.${exerciseIndex}.sets.${index}.reps`, {
             valueAsNumber: true,
-          })}
-        />
-
-        <input
-          className="w-full rounded border border-zinc-600 bg-transparent px-2 py-1"
-          type="number"
-          min={0}
-          placeholder="Частичные"
-          {...register(`exercises.${exerciseIndex}.sets.${index}.partialReps`, {
-            setValueAs: (value: string) =>
-              value === "" ? undefined : Number(value),
           })}
         />
       </div>

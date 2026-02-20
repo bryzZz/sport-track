@@ -2,13 +2,19 @@ import React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { ReactSortable } from "react-sortablejs";
 
+import { useGetExerciseTypes } from "api/exercise-types";
+
 import type { WorkoutTemplateFormValues } from "../WorkoutTemplateForm";
 
 import { ExerciseItem } from "./ExerciseItem";
 
 export const Exercises: React.FC = () => {
-  const { control, getValues } =
-    useFormContext<WorkoutTemplateFormValues>();
+  const { control, getValues } = useFormContext<WorkoutTemplateFormValues>();
+  const {
+    data: exerciseTypes = [],
+    isLoading: isExerciseTypesLoading,
+    isError: isExerciseTypesError,
+  } = useGetExerciseTypes();
 
   const { fields, append, remove, move } = useFieldArray({
     control,
@@ -32,6 +38,12 @@ export const Exercises: React.FC = () => {
   };
 
   const handleRemoveExercise = (index: number) => {
+    const shouldRemove = window.confirm("Удалить упражнение?");
+
+    if (!shouldRemove) {
+      return;
+    }
+
     remove(index);
   };
 
@@ -49,29 +61,32 @@ export const Exercises: React.FC = () => {
   };
 
   return (
-    <div className="flex w-full flex-col items-start gap-2">
+    <div className="flex w-full flex-col gap-4">
       <ReactSortable
         animation={150}
         handle=".exercise-drag-handle"
         list={fields}
         setList={handleReorderExercises}
-        className="flex w-full flex-col items-start gap-2"
+        className="flex w-full flex-col gap-4"
       >
         {fields.map((exercise, index) => (
           <ExerciseItem
             key={exercise.id}
             index={index}
+            exerciseTypes={exerciseTypes}
+            isExerciseTypesError={isExerciseTypesError}
+            isExerciseTypesLoading={isExerciseTypesLoading}
             onRemove={() => handleRemoveExercise(index)}
           />
         ))}
       </ReactSortable>
 
       <button
-        className="cursor-pointer rounded border px-6 py-2"
+        className="cursor-pointer rounded border px-4 py-2"
         type="button"
         onClick={handleAddExercise}
       >
-        Add Exercise
+        Добавить упражнение
       </button>
     </div>
   );

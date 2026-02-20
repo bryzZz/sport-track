@@ -30,14 +30,18 @@ export const Sets: React.FC<SetsProps> = (props) => {
   };
 
   const handleRemoveSet = (index: number) => {
+    const shouldRemove = window.confirm("Удалить подход?");
+
+    if (!shouldRemove) {
+      return;
+    }
+
     remove(index);
   };
 
   return (
-    <div className="mt-2">
-      <p>Sets: </p>
-
-      <div className="flex w-full flex-col gap-2">
+    <div className="flex flex-col gap-2 text-sm">
+      <div className="flex flex-col gap-2">
         {fields.map((setItem, index) => (
           <SetItem
             key={setItem.id}
@@ -48,13 +52,18 @@ export const Sets: React.FC<SetsProps> = (props) => {
         ))}
       </div>
 
-      <button
-        className="mt-2 cursor-pointer rounded border px-4 py-2"
-        type="button"
-        onClick={handleAddSet}
-      >
-        Add Set
-      </button>
+      <div className="grid grid-cols-[40px_90px_140px] items-center gap-2">
+        <div className="flex items-center justify-center">
+          <button
+            className="size-7 cursor-pointer rounded-full border text-center"
+            type="button"
+            aria-label="Добавить подход"
+            onClick={handleAddSet}
+          >
+            +
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

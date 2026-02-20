@@ -92,6 +92,8 @@ export const EditWorkoutTemplate: React.FC = () => {
 
     window.alert("Шаблон обновлен.");
     window.history.back();
+
+    return true;
   };
 
   return (
@@ -110,6 +112,7 @@ export const EditWorkoutTemplate: React.FC = () => {
 
       <WorkoutTemplateForm
         defaultValues={defaultValues}
+        draftStorageKey={`workout-template:edit:draft:v1:${templateId}`}
         onSubmit={handleSubmit}
         submitLabel="Сохранить шаблон"
       />
