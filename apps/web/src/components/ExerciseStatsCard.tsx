@@ -2,16 +2,9 @@ import React from "react";
 
 import { ExerciseSetsChart } from "./ExerciseSetsChart";
 
-type PhaseType = "strict" | "cheating";
-
-type ExercisePhase = {
+type ExerciseSet = {
   reps: number;
   weight: number;
-  type: PhaseType;
-};
-
-type ExerciseSet = {
-  phases: ExercisePhase[];
 };
 
 type ExerciseRecord = {

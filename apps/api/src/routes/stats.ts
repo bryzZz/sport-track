@@ -208,25 +208,18 @@ export const statsRoutes: FastifyPluginAsync = async (app) => {
           date: formatDate(session.performedAt),
           done: true,
           sets: completedSets.map((set) => ({
-            phases: [
-              {
-                reps: set.reps,
-                weight: set.weight,
-                type: "strict" as const,
-              },
-            ],
+            reps: set.reps,
+            weight: set.weight,
           })),
         };
       });
 
       const completedSets = records.flatMap((record) =>
-        record.sets.flatMap((set) =>
-          set.phases.map((phase) => ({
-            reps: phase.reps,
-            weight: phase.weight,
-            volume: phase.reps * phase.weight,
-          })),
-        ),
+        record.sets.map((set) => ({
+          reps: set.reps,
+          weight: set.weight,
+          volume: set.reps * set.weight,
+        })),
       );
 
       const bestSet = completedSets.reduce<{ reps: number; weight: number } | null>(

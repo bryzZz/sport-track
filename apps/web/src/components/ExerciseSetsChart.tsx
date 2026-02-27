@@ -10,16 +10,9 @@ import {
   YAxis,
 } from "recharts";
 
-type PhaseType = "strict" | "cheating";
-
-type ExercisePhase = {
+type ExerciseSet = {
   reps: number;
   weight: number;
-  type: PhaseType;
-};
-
-type ExerciseSet = {
-  phases: ExercisePhase[];
 };
 
 type ExerciseRecord = {
@@ -40,29 +33,33 @@ const metricLabels: Record<MetricType, string> = {
   volume: "Объём",
 };
 
-const phaseColors: Record<PhaseType, string> = {
-  strict: "#7fc65c",
-  cheating: "#f59e0b",
-};
-
 const metricOrder: MetricType[] = ["weight", "reps", "volume"];
 
-const getPhaseValue = (phase: ExercisePhase, metric: MetricType) => {
+const setColors = [
+  "#7fc65c",
+  "#34d399",
+  "#22d3ee",
+  "#60a5fa",
+  "#a78bfa",
+  "#f59e0b",
+];
+
+const getSetMetricValue = (setItem: ExerciseSet, metric: MetricType) => {
   if (metric === "weight") {
-    return phase.weight;
+    return setItem.weight;
   }
 
   if (metric === "reps") {
-    return phase.reps;
+    return setItem.reps;
   }
 
-  return phase.reps * phase.weight;
+  return setItem.reps * setItem.weight;
 };
 
 export const ExerciseSetsChart: React.FC<ExerciseSetsChartProps> = ({
   records,
 }) => {
-  const [activeMetrics, setActiveMetrics] = useState<MetricType[]>(["volume"]);
+  const [activeMetrics, setActiveMetrics] = useState<MetricType[]>(["weight"]);
 
   if (records.length === 0) {
     return <p>Нет данных по упражнениям</p>;
@@ -72,57 +69,30 @@ export const ExerciseSetsChart: React.FC<ExerciseSetsChartProps> = ({
     (a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime(),
   );
 
+  const maxSetsCount = sortedRecords.reduce((maxSets, record) => {
+    return Math.max(maxSets, record.sets.length);
+  }, 0);
+
   const doneByDate = new Map(
     sortedRecords.map((record) => [record.date, record.done]),
   );
 
   const data = sortedRecords.map((record) => {
-    if (!record.done || record.sets.length === 0) {
-      return {
-        date: record.date,
-        done: record.done,
-        weight_strict: 0,
-        weight_cheating: 0,
-        reps_strict: 0,
-        reps_cheating: 0,
-        volume_strict: 0,
-        volume_cheating: 0,
-      };
-    }
-
-    const totals = record.sets.reduce(
-      (acc, setItem) => {
-        setItem.phases.forEach((phase) => {
-          const metricValue = metricOrder.reduce(
-            (metricAcc, metric) => {
-              metricAcc[metric] += getPhaseValue(phase, metric);
-              return metricAcc;
-            },
-            { weight: 0, reps: 0, volume: 0 },
-          );
-
-          acc[phase.type].weight += metricValue.weight;
-          acc[phase.type].reps += metricValue.reps;
-          acc[phase.type].volume += metricValue.volume;
-        });
-        return acc;
-      },
-      {
-        strict: { weight: 0, reps: 0, volume: 0 },
-        cheating: { weight: 0, reps: 0, volume: 0 },
-      },
-    );
-
-    return {
+    const row: Record<string, number | string | boolean> = {
       date: record.date,
       done: record.done,
-      weight_strict: totals.strict.weight,
-      weight_cheating: totals.cheating.weight,
-      reps_strict: totals.strict.reps,
-      reps_cheating: totals.cheating.reps,
-      volume_strict: totals.strict.volume,
-      volume_cheating: totals.cheating.volume,
     };
+
+    metricOrder.forEach((metric) => {
+      for (let setIndex = 0; setIndex < maxSetsCount; setIndex += 1) {
+        const setItem = record.sets[setIndex];
+
+        row[`${metric}_set_${setIndex + 1}`] =
+          !record.done || !setItem ? 0 : getSetMetricValue(setItem, metric);
+      }
+    });
+
+    return row;
   });
 
   const metricLabelList = metricOrder.map((metric) => ({
@@ -180,22 +150,17 @@ export const ExerciseSetsChart: React.FC<ExerciseSetsChartProps> = ({
             <Tooltip
               labelFormatter={(value) => format(parseISO(value), "dd MMM yyyy")}
             />
-            {activeMetrics.map((metric) => (
-              <React.Fragment key={metric}>
+            {activeMetrics.map((metric) => {
+              return Array.from({ length: maxSetsCount }).map((_, setIndex) => (
                 <Bar
-                  dataKey={`${metric}_strict`}
+                  key={`${metric}_set_${setIndex + 1}`}
+                  dataKey={`${metric}_set_${setIndex + 1}`}
                   stackId={metric}
-                  fill={phaseColors.strict}
-                  name={`${metricLabels[metric]} (strict)`}
+                  fill={setColors[setIndex % setColors.length]}
+                  name={`${metricLabels[metric]} • Подход ${setIndex + 1}`}
                 />
-                <Bar
-                  dataKey={`${metric}_cheating`}
-                  stackId={metric}
-                  fill={phaseColors.cheating}
-                  name={`${metricLabels[metric]} (cheating)`}
-                />
-              </React.Fragment>
-            ))}
+              ));
+            })}
           </BarChart>
         </ResponsiveContainer>
       )}

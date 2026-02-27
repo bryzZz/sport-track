@@ -16,14 +16,9 @@ export const workoutOverviewQuerySchema = z.object({
   to: optionalDateStringSchema,
 });
 
-const workoutOverviewExercisePhaseSchema = z.object({
+const workoutOverviewExerciseSetSchema = z.object({
   reps: z.number().int().min(0),
   weight: z.number().min(0),
-  type: z.enum(["strict", "cheating"]),
-});
-
-const workoutOverviewExerciseSetSchema = z.object({
-  phases: z.array(workoutOverviewExercisePhaseSchema),
 });
 
 const workoutOverviewExerciseRecordSchema = z.object({
