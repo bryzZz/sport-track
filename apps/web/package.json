@@ -11,9 +11,9 @@
     "typecheck": "tsc --noEmit -p tsconfig.app.json"
   },
   "dependencies": {
+    "@sport-track/contracts": "workspace:*",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-query": "^5.90.21",
-    "@sport-track/contracts": "workspace:*",
     "axios": "^1.11.0",
     "classnames": "^2.5.1",
     "date-fns": "^4.1.0",
@@ -42,6 +42,7 @@
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
     "vite": "^7.2.4",
+    "vite-plugin-pwa": "^1.2.0",
     "vite-plugin-svgr": "^4.5.0"
   }
 }
