@@ -1,5 +1,6 @@
 import React from "react";
-import { Link, useParams } from "react-router";
+
+import { useRememberedTemplateId } from "utils/hooks/useRememberedTemplateId";
 
 import {
   WorkoutTemplateForm,
@@ -30,8 +31,9 @@ const createInitialValues = (
 });
 
 export const EditWorkoutTemplate: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const templateId = id ?? "";
+  const templateId =
+    useRememberedTemplateId("last-template-id:template") ?? "";
+
   const {
     data: template,
     isLoading,
@@ -40,7 +42,7 @@ export const EditWorkoutTemplate: React.FC = () => {
   const { mutateAsync: updateWorkoutTemplate } =
     useUpdateWorkoutTemplate(templateId);
 
-  if (!id) {
+  if (!templateId) {
     return (
       <div>
         <h1 className="mb-6 text-4xl">Редактирование тренировки</h1>
@@ -98,17 +100,7 @@ export const EditWorkoutTemplate: React.FC = () => {
 
   return (
     <div>
-      <div className="mb-6 flex items-center gap-4">
-        <Link to="/">
-          <button
-            className="cursor-pointer rounded border px-6 py-2"
-            type="button"
-          >
-            Back
-          </button>
-        </Link>
-        <h1 className="text-3xl">Edit Workout</h1>
-      </div>
+      <h1 className="mb-6 text-3xl">Edit Workout</h1>
 
       <WorkoutTemplateForm
         defaultValues={defaultValues}

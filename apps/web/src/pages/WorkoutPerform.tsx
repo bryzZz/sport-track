@@ -1,6 +1,5 @@
-import { Link, useSearchParams } from "react-router";
-
 import { useApiKeepAliveOnFocus } from "utils/hooks/useApiKeepAliveOnFocus";
+import { useRememberedTemplateId } from "utils/hooks/useRememberedTemplateId";
 
 import {
   WorkoutPerformForm,
@@ -47,8 +46,7 @@ const normalizeComment = (comment: string | null | undefined) => {
 };
 
 export const WorkoutPerform: React.FC = () => {
-  const [searchParams] = useSearchParams();
-  const templateId = searchParams.get("templateId");
+  const templateId = useRememberedTemplateId("last-template-id:perform");
 
   const {
     data: template,
@@ -162,17 +160,7 @@ export const WorkoutPerform: React.FC = () => {
 
   return (
     <div>
-      <div className="mb-6 flex items-center gap-4">
-        <Link to="/">
-          <button
-            className="cursor-pointer rounded border px-6 py-2"
-            type="button"
-          >
-            Back
-          </button>
-        </Link>
-        <h1 className="text-3xl">{template.name} Perform</h1>
-      </div>
+      <h1 className="mb-6 text-3xl">{template.name} Perform</h1>
 
       <WorkoutPerformForm
         template={template}

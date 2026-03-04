@@ -136,7 +136,12 @@ export const ExerciseSetsChart: React.FC<ExerciseSetsChartProps> = ({
       )}
 
       {hasActiveMetrics && (
-        <ResponsiveContainer width="100%" height={260}>
+        <ResponsiveContainer
+          width="100%"
+          height={260}
+          minWidth={280}
+          initialDimension={{ width: 320, height: 260 }}
+        >
           <BarChart data={data}>
             <XAxis
               dataKey="date"
@@ -157,6 +162,7 @@ export const ExerciseSetsChart: React.FC<ExerciseSetsChartProps> = ({
                   dataKey={`${metric}_set_${setIndex + 1}`}
                   stackId={metric}
                   fill={setColors[setIndex % setColors.length]}
+                  isAnimationActive={false}
                   name={`${metricLabels[metric]} • Подход ${setIndex + 1}`}
                 />
               ));

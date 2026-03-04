@@ -33,7 +33,7 @@ export const WorkoutTemplates: React.FC = () => {
             <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
               <Link
                 className="w-full sm:w-auto"
-                to={`/templates/${template.id}/edit`}
+                to={`/templates/edit?templateId=${encodeURIComponent(template.id)}`}
               >
                 <button className={baseButtonClassName} type="button">
                   Edit

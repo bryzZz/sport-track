@@ -31,7 +31,7 @@ export const ExerciseStatsCard: React.FC<ExerciseStatsCardProps> = ({
   exercise,
 }) => {
   return (
-    <div className="rounded-xl border p-4">
+    <div className="min-w-0 rounded-xl border p-4">
       <div className="mb-4 flex flex-col gap-2">
         <h3 className="text-xl font-semibold">{exercise.name}</h3>
         <p className="text-sm text-neutral-600">

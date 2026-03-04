@@ -1,15 +1,14 @@
 import React from "react";
-import { Link, useSearchParams } from "react-router";
 
 import { useGetWorkoutOverviewStats } from "api/stats";
+import { useRememberedTemplateId } from "utils/hooks/useRememberedTemplateId";
 
 import Fire from "assets/icons/fire.svg?react";
 import { ExerciseStatsCard } from "components/ExerciseStatsCard";
 import { WorkoutHeatmapCompact } from "components/WorkoutHeatmapCompact";
 
 export const WorkoutStats: React.FC = () => {
-  const [searchParams] = useSearchParams();
-  const templateId = searchParams.get("templateId") ?? "";
+  const templateId = useRememberedTemplateId("last-template-id:stats") ?? "";
   const { data, isLoading, isError } = useGetWorkoutOverviewStats(templateId);
 
   if (!templateId) {
@@ -26,17 +25,7 @@ export const WorkoutStats: React.FC = () => {
 
   return (
     <div>
-      <div className="mb-6 flex items-center gap-4">
-        <Link to="/">
-          <button
-            className="cursor-pointer rounded border px-6 py-2"
-            type="button"
-          >
-            Back
-          </button>
-        </Link>
-        <h1 className="text-3xl">{data.template.name} Workout Stats</h1>
-      </div>
+      <h1 className="mb-6 text-3xl">{data.template.name} Workout Stats</h1>
 
       <div className="flex flex-col gap-4">
         <div>
