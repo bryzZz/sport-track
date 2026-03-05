@@ -35,7 +35,7 @@ export const ExerciseStatsCard: React.FC<ExerciseStatsCardProps> = ({
       <div className="mb-4 flex flex-col gap-2">
         <h3 className="text-xl font-semibold">{exercise.name}</h3>
         <p className="text-sm text-neutral-600">
-          Лучший сет: {exercise.bestSet.reps} × {exercise.bestSet.weight} кг
+          Best set: {exercise.bestSet.reps} × {exercise.bestSet.weight} kg
         </p>
       </div>
 

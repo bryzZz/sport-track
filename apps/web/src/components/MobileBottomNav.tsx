@@ -35,28 +35,28 @@ export const MobileBottomNav: React.FC = () => {
   const navItems: MobileNavItem[] = [
     {
       key: "home",
-      label: "Главная",
+      label: "Home",
       path: "/",
       isActive: (pathname) => pathname === "/",
       icon: <HomeIcon aria-hidden="true" className="size-5" />,
     },
     {
       key: "template",
-      label: "Шаблон",
+      label: "Template",
       path: templatePath,
       isActive: (pathname) => pathname.startsWith("/templates/"),
       icon: <TemplateIcon aria-hidden="true" className="size-5" />,
     },
     {
       key: "perform",
-      label: "Выполнение",
+      label: "Perform",
       path: createPathWithTemplateId("/workout/perform", performPageTemplateId),
       isActive: (pathname) => pathname.startsWith("/workout/perform"),
       icon: <PerformIcon aria-hidden="true" className="size-5" />,
     },
     {
       key: "stats",
-      label: "Статистика",
+      label: "Stats",
       path: createPathWithTemplateId("/stats", statsPageTemplateId),
       isActive: (pathname) => pathname.startsWith("/stats"),
       icon: <StatsIcon aria-hidden="true" className="size-5" />,

@@ -45,8 +45,8 @@ export const EditWorkoutTemplate: React.FC = () => {
   if (!templateId) {
     return (
       <div>
-        <h1 className="mb-6 text-4xl">Редактирование тренировки</h1>
-        <p>Не передан идентификатор шаблона.</p>
+        <h1 className="mb-6 text-4xl">Edit Workout</h1>
+        <p>Template id is required.</p>
       </div>
     );
   }
@@ -54,8 +54,8 @@ export const EditWorkoutTemplate: React.FC = () => {
   if (isLoading) {
     return (
       <div>
-        <h1 className="mb-6 text-4xl">Редактирование тренировки</h1>
-        <p>Загрузка шаблона...</p>
+        <h1 className="mb-6 text-4xl">Edit Workout</h1>
+        <p>Loading template...</p>
       </div>
     );
   }
@@ -63,8 +63,8 @@ export const EditWorkoutTemplate: React.FC = () => {
   if (isError || !template) {
     return (
       <div>
-        <h1 className="mb-6 text-4xl">Редактирование тренировки</h1>
-        <p>Шаблон тренировки не найден.</p>
+        <h1 className="mb-6 text-4xl">Edit Workout</h1>
+        <p>Workout template not found.</p>
       </div>
     );
   }
@@ -92,7 +92,7 @@ export const EditWorkoutTemplate: React.FC = () => {
 
     await updateWorkoutTemplate(payload);
 
-    window.alert("Шаблон обновлен.");
+    window.alert("Template updated.");
     window.history.back();
 
     return true;
@@ -106,7 +106,7 @@ export const EditWorkoutTemplate: React.FC = () => {
         defaultValues={defaultValues}
         draftStorageKey={`workout-template:edit:draft:v1:${templateId}`}
         onSubmit={handleSubmit}
-        submitLabel="Сохранить шаблон"
+        submitLabel="Save Template"
       />
     </div>
   );

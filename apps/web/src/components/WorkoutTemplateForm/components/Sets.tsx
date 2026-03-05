@@ -30,7 +30,7 @@ export const Sets: React.FC<SetsProps> = (props) => {
   };
 
   const handleRemoveSet = (index: number) => {
-    const shouldRemove = window.confirm("Удалить подход?");
+    const shouldRemove = window.confirm("Remove set?");
 
     if (!shouldRemove) {
       return;
@@ -57,7 +57,7 @@ export const Sets: React.FC<SetsProps> = (props) => {
           <button
             className="size-7 cursor-pointer rounded-full border text-center"
             type="button"
-            aria-label="Добавить подход"
+            aria-label="Add set"
             onClick={handleAddSet}
           >
             +

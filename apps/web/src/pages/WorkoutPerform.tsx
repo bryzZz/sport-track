@@ -68,8 +68,8 @@ export const WorkoutPerform: React.FC = () => {
   if (!templateId) {
     return (
       <div>
-        <h1 className="mb-6 text-4xl">Выполнение тренировки</h1>
-        <p>Не передан идентификатор шаблона.</p>
+        <h1 className="mb-6 text-4xl">Perform Workout</h1>
+        <p>Template id is required.</p>
       </div>
     );
   }
@@ -77,8 +77,8 @@ export const WorkoutPerform: React.FC = () => {
   if (isLoading) {
     return (
       <div>
-        <h1 className="mb-6 text-4xl">Выполнение тренировки</h1>
-        <p>Загрузка шаблона...</p>
+        <h1 className="mb-6 text-4xl">Perform Workout</h1>
+        <p>Loading template...</p>
       </div>
     );
   }
@@ -86,8 +86,8 @@ export const WorkoutPerform: React.FC = () => {
   if (isError || !template) {
     return (
       <div>
-        <h1 className="mb-6 text-4xl">Выполнение тренировки</h1>
-        <p>Шаблон тренировки не найден.</p>
+        <h1 className="mb-6 text-4xl">Perform Workout</h1>
+        <p>Workout template not found.</p>
       </div>
     );
   }
@@ -145,13 +145,13 @@ export const WorkoutPerform: React.FC = () => {
     try {
       await createWorkoutSession(payload);
 
-      window.alert("Тренировка сохранена.");
+      window.alert("Workout saved.");
       window.history.back();
 
       return true;
     } catch {
       window.alert(
-        "Не удалось сохранить тренировку. Проверь соединение и попробуй снова. Черновик сохранен локально.",
+        "Failed to save workout. Check your connection and try again. Draft is saved locally.",
       );
 
       return false;

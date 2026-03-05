@@ -28,9 +28,9 @@ type ExerciseSetsChartProps = {
 };
 
 const metricLabels: Record<MetricType, string> = {
-  weight: "Вес",
-  reps: "Повторения",
-  volume: "Объём",
+  weight: "Weight",
+  reps: "Reps",
+  volume: "Volume",
 };
 
 const metricOrder: MetricType[] = ["weight", "reps", "volume"];
@@ -62,7 +62,7 @@ export const ExerciseSetsChart: React.FC<ExerciseSetsChartProps> = ({
   const [activeMetrics, setActiveMetrics] = useState<MetricType[]>(["weight"]);
 
   if (records.length === 0) {
-    return <p>Нет данных по упражнениям</p>;
+    return <p>No exercise data</p>;
   }
 
   const sortedRecords = [...records].sort(
@@ -131,7 +131,7 @@ export const ExerciseSetsChart: React.FC<ExerciseSetsChartProps> = ({
 
       {!hasActiveMetrics && (
         <p className="text-sm text-neutral-500">
-          Выберите хотя бы один показатель
+          Select at least one metric
         </p>
       )}
 
@@ -163,7 +163,7 @@ export const ExerciseSetsChart: React.FC<ExerciseSetsChartProps> = ({
                   stackId={metric}
                   fill={setColors[setIndex % setColors.length]}
                   isAnimationActive={false}
-                  name={`${metricLabels[metric]} • Подход ${setIndex + 1}`}
+                  name={`${metricLabels[metric]} • Set ${setIndex + 1}`}
                 />
               ));
             })}

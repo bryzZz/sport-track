@@ -9,11 +9,11 @@ export const WorkoutTemplates: React.FC = () => {
     "w-full cursor-pointer rounded border px-4 py-2 text-left sm:w-auto sm:px-6 sm:text-center";
 
   if (isLoading) {
-    return <p>Загрузка шаблонов...</p>;
+    return <p>Loading templates...</p>;
   }
 
   if (isError) {
-    return <p>Не удалось загрузить шаблоны тренировок.</p>;
+    return <p>Failed to load workout templates.</p>;
   }
 
   return (

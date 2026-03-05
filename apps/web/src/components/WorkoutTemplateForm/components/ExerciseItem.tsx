@@ -69,7 +69,7 @@ export const ExerciseItem: React.FC<ExerciseItemProps> = (props) => {
     <div className="border-b pb-3">
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <button
-          aria-label="Переместить упражнение"
+          aria-label="Move exercise"
           className="exercise-drag-handle inline-flex cursor-grab items-center rounded border px-3 py-1.5 text-base leading-5 active:cursor-grabbing"
           type="button"
         >
@@ -89,10 +89,10 @@ export const ExerciseItem: React.FC<ExerciseItemProps> = (props) => {
             >
               <option value="">
                 {isExerciseTypesLoading
-                  ? "Загрузка упражнений..."
+                  ? "Loading exercises..."
                   : isExerciseTypesError
-                    ? "Ошибка загрузки упражнений"
-                    : "Выберите упражнение"}
+                    ? "Failed to load exercises"
+                    : "Select exercise"}
               </option>
               {exerciseTypes.map((exerciseType) => (
                 <option key={exerciseType.id} value={exerciseType.id}>
@@ -108,7 +108,7 @@ export const ExerciseItem: React.FC<ExerciseItemProps> = (props) => {
           type="button"
           onClick={onRemove}
         >
-          Удалить
+          Remove
         </button>
       </div>
 
@@ -129,7 +129,7 @@ export const ExerciseItem: React.FC<ExerciseItemProps> = (props) => {
       <div className="mt-2">
         <textarea
           className="w-full rounded border border-zinc-600 bg-transparent px-2 py-1"
-          placeholder="Комментарий"
+          placeholder="Comment"
           rows={2}
           {...register(`exercises.${index}.comment`)}
         />

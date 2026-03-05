@@ -55,7 +55,7 @@ export const WorkoutHeatmapCompact: React.FC = () => {
     .sort((a, b) => a.date.getTime() - b.date.getTime());
 
   if (normalizedData.length === 0) {
-    return <p>Нет данных для построения heatmap</p>;
+    return <p>No data to build heatmap</p>;
   }
 
   const columns = 12;
@@ -117,8 +117,8 @@ export const WorkoutHeatmapCompact: React.FC = () => {
           {normalizedData.map((day) => {
             const isRestDay = !day.done;
             const label = isRestDay
-              ? `${format(day.date, "dd.MM.yyyy")} — пропуск тренировки`
-              : `${format(day.date, "dd.MM.yyyy")} — интенсивность ${day.intensity}`;
+              ? `${format(day.date, "dd.MM.yyyy")} — workout missed`
+              : `${format(day.date, "dd.MM.yyyy")} — intensity ${day.intensity}`;
 
             return (
               <div
@@ -136,13 +136,13 @@ export const WorkoutHeatmapCompact: React.FC = () => {
       </div>
 
       <div className="flex items-center gap-3 text-sm text-neutral-500">
-        <span>Меньше</span>
+        <span>Less</span>
         <div className="flex items-center gap-1">
           {intensityClasses.map((itemClass, index) => (
             <span key={index} className={`h-3 w-3 rounded ${itemClass}`} />
           ))}
         </div>
-        <span>Больше</span>
+        <span>More</span>
       </div>
     </div>
   );

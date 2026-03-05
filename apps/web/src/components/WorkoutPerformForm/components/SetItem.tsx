@@ -85,7 +85,7 @@ export const SetItem: React.FC<SetItemProps> = ({
       <div className="flex items-center justify-center">
         <input
           type="checkbox"
-          aria-label={`Подход ${index + 1}`}
+          aria-label={`Set ${index + 1}`}
           {...register(`exercises.${exerciseIndex}.sets.${index}.isCompleted`)}
         />
       </div>

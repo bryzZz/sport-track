@@ -39,7 +39,7 @@ export const CreateWorkoutTemplate: React.FC = () => {
 
     await createWorkoutTemplate(payload);
 
-    window.alert("Шаблон создан.");
+    window.alert("Template created.");
     window.history.back();
 
     return true;
@@ -53,7 +53,7 @@ export const CreateWorkoutTemplate: React.FC = () => {
         defaultValues={defaultValues}
         draftStorageKey="workout-template:create:draft:v1"
         onSubmit={handleSubmit}
-        submitLabel="Создать шаблон"
+        submitLabel="Create Template"
       />
     </div>
   );

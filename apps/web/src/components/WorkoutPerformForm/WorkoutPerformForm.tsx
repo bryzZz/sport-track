@@ -65,20 +65,20 @@ export const WorkoutPerformForm = ({
             type="submit"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Сохраняем..." : "Завершить тренировку"}
+            {isSubmitting ? "Saving..." : "Finish Workout"}
           </button>
         </fieldset>
 
         <div>
           {restoredDraftAt && (
             <p className="text-sm text-slate-500">
-              Черновик восстановлен в {format(restoredDraftAt, "HH:mm:ss")}
+              Draft restored at {format(restoredDraftAt, "HH:mm:ss")}
             </p>
           )}
 
           {savedDraftAt && (
             <p className="text-sm text-slate-500">
-              Черновик сохранен в {format(savedDraftAt, "HH:mm:ss")}
+              Draft saved at {format(savedDraftAt, "HH:mm:ss")}
             </p>
           )}
         </div>

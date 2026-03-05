@@ -71,7 +71,7 @@ export const WorkoutTemplateForm: React.FC<WorkoutTemplateFormProps> = (
         <fieldset className="flex flex-col gap-6" disabled={isSubmitting}>
           <input
             className="w-full rounded border px-4 py-2"
-            placeholder="Название шаблона"
+            placeholder="Template Name"
             type="text"
             {...register("name")}
           />
@@ -83,20 +83,20 @@ export const WorkoutTemplateForm: React.FC<WorkoutTemplateFormProps> = (
             type="submit"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Сохраняем..." : submitLabel}
+            {isSubmitting ? "Saving..." : submitLabel}
           </button>
         </fieldset>
 
         <div>
           {restoredDraftAt && (
             <p className="text-sm text-slate-500">
-              Черновик восстановлен в {format(restoredDraftAt, "HH:mm:ss")}
+              Draft restored at {format(restoredDraftAt, "HH:mm:ss")}
             </p>
           )}
 
           {savedDraftAt && (
             <p className="text-sm text-slate-500">
-              Черновик сохранен в {format(savedDraftAt, "HH:mm:ss")}
+              Draft saved at {format(savedDraftAt, "HH:mm:ss")}
             </p>
           )}
         </div>

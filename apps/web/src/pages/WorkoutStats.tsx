@@ -12,15 +12,30 @@ export const WorkoutStats: React.FC = () => {
   const { data, isLoading, isError } = useGetWorkoutOverviewStats(templateId);
 
   if (!templateId) {
-    return <p>templateId is required</p>;
+    return (
+      <div>
+        <h1 className="mb-6 text-4xl">Workout Stats</h1>
+        <p>Template id is required.</p>
+      </div>
+    );
   }
 
   if (isLoading) {
-    return <p>Загрузка статистики...</p>;
+    return (
+      <div>
+        <h1 className="mb-6 text-4xl">Workout Stats</h1>
+        <p>Loading stats...</p>
+      </div>
+    );
   }
 
   if (isError || !data) {
-    return <p>Не удалось загрузить статистику.</p>;
+    return (
+      <div>
+        <h1 className="mb-6 text-4xl">Workout Stats</h1>
+        <p>Failed to load stats.</p>
+      </div>
+    );
   }
 
   return (
@@ -30,35 +45,35 @@ export const WorkoutStats: React.FC = () => {
       <div className="flex flex-col gap-4">
         <div>
           <div className="flex items-center gap-2">
-            Сессий: {data.summary.sessionsCount}{" "}
+            Sessions: {data.summary.sessionsCount}{" "}
             <Fire className="size-4 shrink-0" />
           </div>
-          <p>Последняя: {data.summary.lastSessionDate ?? "Нет данных"}</p>
+          <p>Last: {data.summary.lastSessionDate ?? "No data"}</p>
         </div>
 
         <div>
           <p>
-            Общий объём (tonnage): {data.summary.totalVolume.value}{" "}
+            Total volume (tonnage): {data.summary.totalVolume.value}{" "}
             {data.summary.totalVolume.unit}
           </p>
           {data.summary.totalVolume.trend.deltaPercent === null ? (
             <p className="text-neutral-500">
-              Нет данных для тренда за 4 недели
+              No trend data for the last 4 weeks
             </p>
           ) : (
             <p className="text-lime-600">
               {data.summary.totalVolume.trend.deltaPercent >= 0 ? "↑" : "↓"}{" "}
-              {Math.abs(data.summary.totalVolume.trend.deltaPercent)}% за 4
-              недели
+              {Math.abs(data.summary.totalVolume.trend.deltaPercent)}% over 4
+              weeks
             </p>
           )}
         </div>
 
         <div>
           <p>
-            Средняя интенсивность:{" "}
+            Average intensity:{" "}
             {data.summary.averageIntensity.rpe === null
-              ? "Нет данных"
+              ? "No data"
               : `RPE ${data.summary.averageIntensity.rpe}`}
           </p>
           <WorkoutHeatmapCompact />

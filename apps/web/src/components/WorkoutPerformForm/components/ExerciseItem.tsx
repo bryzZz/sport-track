@@ -113,7 +113,7 @@ export const ExerciseItem: React.FC<ExerciseItemProps> = ({
             <div className="py-1 text-center font-medium">Reps</div>
             <div className="flex items-center justify-center">
               <input
-                aria-label="Отметить все подходы"
+                aria-label="Mark all sets"
                 type="checkbox"
                 checked={isAllCompleted}
                 onChange={handleToggleAll}
@@ -132,7 +132,7 @@ export const ExerciseItem: React.FC<ExerciseItemProps> = ({
       <textarea
         className="w-full rounded-md border px-3 py-2 text-sm"
         rows={2}
-        placeholder="Комментарий к упражнению"
+        placeholder="Exercise comment"
         {...register(`exercises.${index}.template.comment`)}
       />
     </div>

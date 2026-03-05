@@ -38,7 +38,7 @@ export const Exercises: React.FC = () => {
   };
 
   const handleRemoveExercise = (index: number) => {
-    const shouldRemove = window.confirm("Удалить упражнение?");
+    const shouldRemove = window.confirm("Remove exercise?");
 
     if (!shouldRemove) {
       return;
@@ -86,7 +86,7 @@ export const Exercises: React.FC = () => {
         type="button"
         onClick={handleAddExercise}
       >
-        Добавить упражнение
+        Add Exercise
       </button>
     </div>
   );
