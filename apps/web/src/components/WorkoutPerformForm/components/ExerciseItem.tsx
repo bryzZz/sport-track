@@ -115,6 +115,7 @@ export const ExerciseItem: React.FC<ExerciseItemProps> = ({
               <input
                 aria-label="Mark all sets"
                 type="checkbox"
+                autoComplete="off"
                 checked={isAllCompleted}
                 onChange={handleToggleAll}
               />

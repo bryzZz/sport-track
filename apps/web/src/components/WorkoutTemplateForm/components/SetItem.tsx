@@ -36,6 +36,7 @@ export const SetItem: React.FC<SetItemProps> = (props) => {
           className="w-full rounded-md border px-3 py-1.5 text-center outline-black"
           type="text"
           inputMode="numeric"
+          autoComplete="off"
           onFocus={handleSelectAllOnFocus}
           {...register(`exercises.${exerciseIndex}.sets.${index}.weight`, {
             valueAsNumber: true,
@@ -48,6 +49,7 @@ export const SetItem: React.FC<SetItemProps> = (props) => {
           className="w-full rounded-md border px-3 py-1.5 text-center outline-black"
           type="text"
           inputMode="numeric"
+          autoComplete="off"
           onFocus={handleSelectAllOnFocus}
           {...register(`exercises.${exerciseIndex}.sets.${index}.reps`, {
             valueAsNumber: true,

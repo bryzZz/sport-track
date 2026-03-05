@@ -54,6 +54,7 @@ export const WorkoutPerformForm = ({
             <input
               className="w-28 rounded border px-3 py-2"
               type="number"
+              autoComplete="off"
               min={1}
               max={10}
               {...register("rpe", { valueAsNumber: true })}

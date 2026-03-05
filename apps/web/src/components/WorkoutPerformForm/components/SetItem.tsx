@@ -59,6 +59,7 @@ export const SetItem: React.FC<SetItemProps> = ({
         <input
           className="w-full rounded-md border px-3 py-1.5 text-center outline-black"
           inputMode="numeric"
+          autoComplete="off"
           onFocus={handleSelectAllOnFocus}
           {...register(`exercises.${exerciseIndex}.sets.${index}.weight`, {
             valueAsNumber: true,
@@ -69,6 +70,7 @@ export const SetItem: React.FC<SetItemProps> = ({
         <input
           className="w-full px-3 py-1.5 text-center outline-none"
           inputMode="numeric"
+          autoComplete="off"
           onFocus={handleSelectAllOnFocus}
           {...register(`exercises.${exerciseIndex}.sets.${index}.reps`, {
             valueAsNumber: true,
@@ -81,6 +83,7 @@ export const SetItem: React.FC<SetItemProps> = ({
             <input
               className="w-full px-3 py-1.5 text-center outline-none"
               inputMode="numeric"
+              autoComplete="off"
               onFocus={handleSelectAllOnFocus}
               {...register(
                 `exercises.${exerciseIndex}.sets.${index}.partialReps`,
@@ -93,6 +96,7 @@ export const SetItem: React.FC<SetItemProps> = ({
       <div className="flex items-center justify-center">
         <input
           type="checkbox"
+          autoComplete="off"
           aria-label={`Set ${index + 1}`}
           {...register(`exercises.${exerciseIndex}.sets.${index}.isCompleted`)}
         />

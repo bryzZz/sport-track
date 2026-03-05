@@ -73,6 +73,7 @@ export const WorkoutTemplateForm: React.FC<WorkoutTemplateFormProps> = (
             className="w-full rounded border px-4 py-2"
             placeholder="Template Name"
             type="text"
+            autoComplete="off"
             {...register("name")}
           />
 

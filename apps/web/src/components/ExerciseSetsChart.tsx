@@ -114,6 +114,7 @@ export const ExerciseSetsChart: React.FC<ExerciseSetsChartProps> = ({
             >
               <input
                 type="checkbox"
+                autoComplete="off"
                 checked={isChecked}
                 onChange={() =>
                   setActiveMetrics((prev) =>
