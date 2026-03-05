@@ -24,6 +24,11 @@ export const SetItem: React.FC<SetItemProps> = ({
   weightUnit,
 }) => {
   const { control, register } = useFormContext<WorkoutPerformFormValues>();
+  const handleSelectAllOnFocus = (
+    event: React.FocusEvent<HTMLInputElement>,
+  ) => {
+    event.target.select();
+  };
 
   const partialReps =
     useWatch({
@@ -54,6 +59,7 @@ export const SetItem: React.FC<SetItemProps> = ({
         <input
           className="w-full rounded-md border px-3 py-1.5 text-center outline-black"
           inputMode="numeric"
+          onFocus={handleSelectAllOnFocus}
           {...register(`exercises.${exerciseIndex}.sets.${index}.weight`, {
             valueAsNumber: true,
           })}
@@ -63,6 +69,7 @@ export const SetItem: React.FC<SetItemProps> = ({
         <input
           className="w-full px-3 py-1.5 text-center outline-none"
           inputMode="numeric"
+          onFocus={handleSelectAllOnFocus}
           {...register(`exercises.${exerciseIndex}.sets.${index}.reps`, {
             valueAsNumber: true,
           })}
@@ -74,6 +81,7 @@ export const SetItem: React.FC<SetItemProps> = ({
             <input
               className="w-full px-3 py-1.5 text-center outline-none"
               inputMode="numeric"
+              onFocus={handleSelectAllOnFocus}
               {...register(
                 `exercises.${exerciseIndex}.sets.${index}.partialReps`,
                 { valueAsNumber: true },

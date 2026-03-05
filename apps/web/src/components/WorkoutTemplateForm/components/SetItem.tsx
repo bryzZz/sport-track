@@ -13,6 +13,12 @@ export const SetItem: React.FC<SetItemProps> = (props) => {
   const { exerciseIndex, index, onRemove } = props;
   const { register } = useFormContext<WorkoutTemplateFormValues>();
 
+  const handleSelectAllOnFocus = (
+    event: React.FocusEvent<HTMLInputElement>,
+  ) => {
+    event.target.select();
+  };
+
   return (
     <div className="grid grid-cols-[40px_90px_140px] items-center gap-2">
       <div className="flex items-center justify-center">
@@ -30,6 +36,7 @@ export const SetItem: React.FC<SetItemProps> = (props) => {
           className="w-full rounded-md border px-3 py-1.5 text-center outline-black"
           type="text"
           inputMode="numeric"
+          onFocus={handleSelectAllOnFocus}
           {...register(`exercises.${exerciseIndex}.sets.${index}.weight`, {
             valueAsNumber: true,
           })}
@@ -41,6 +48,7 @@ export const SetItem: React.FC<SetItemProps> = (props) => {
           className="w-full rounded-md border px-3 py-1.5 text-center outline-black"
           type="text"
           inputMode="numeric"
+          onFocus={handleSelectAllOnFocus}
           {...register(`exercises.${exerciseIndex}.sets.${index}.reps`, {
             valueAsNumber: true,
           })}
