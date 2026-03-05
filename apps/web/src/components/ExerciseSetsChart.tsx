@@ -131,9 +131,7 @@ export const ExerciseSetsChart: React.FC<ExerciseSetsChartProps> = ({
       </div>
 
       {!hasActiveMetrics && (
-        <p className="text-sm text-neutral-500">
-          Select at least one metric
-        </p>
+        <p className="text-sm text-neutral-500">Select at least one metric</p>
       )}
 
       {hasActiveMetrics && (

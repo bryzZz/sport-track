@@ -67,7 +67,10 @@ export const WorkoutTemplateForm: React.FC<WorkoutTemplateFormProps> = (
 
   return (
     <FormProvider {...methods}>
-      <form className="flex flex-col gap-6" onSubmit={handleSubmit(handleFormSubmit)}>
+      <form
+        className="flex flex-col gap-6"
+        onSubmit={handleSubmit(handleFormSubmit)}
+      >
         <fieldset className="flex flex-col gap-6" disabled={isSubmitting}>
           <input
             className="w-full rounded border px-4 py-2"

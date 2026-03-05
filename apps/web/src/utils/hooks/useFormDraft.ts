@@ -110,7 +110,8 @@ export const useFormWithDraft = <TValues extends FieldValues>({
 
   const methods = useForm<TValues>({
     ...formOptions,
-    defaultValues: (restoredDraft.values ?? defaultValues) as DefaultValues<TValues>,
+    defaultValues: (restoredDraft.values ??
+      defaultValues) as DefaultValues<TValues>,
   });
   const { getValues, watch } = methods;
 
@@ -123,6 +124,7 @@ export const useFormWithDraft = <TValues extends FieldValues>({
   }, [restoredDraft.shouldClearInvalidDraft, storageKey]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/incompatible-library
     const subscription = watch(() => {
       if (saveDraftTimeoutRef.current) {
         window.clearTimeout(saveDraftTimeoutRef.current);

@@ -3,7 +3,9 @@ import { api } from "../api";
 import type { UpsertWorkoutTemplatePayload, WorkoutTemplate } from "./types";
 
 export const getWorkoutTemplates = () => {
-  return api.get<WorkoutTemplate[]>("/workout-templates").then((res) => res.data);
+  return api
+    .get<WorkoutTemplate[]>("/workout-templates")
+    .then((res) => res.data);
 };
 
 export const getWorkoutTemplate = (templateId: string) => {
@@ -12,8 +14,12 @@ export const getWorkoutTemplate = (templateId: string) => {
     .then((res) => res.data);
 };
 
-export const createWorkoutTemplate = (payload: UpsertWorkoutTemplatePayload) => {
-  return api.post<WorkoutTemplate>("/workout-templates", payload).then((res) => res.data);
+export const createWorkoutTemplate = (
+  payload: UpsertWorkoutTemplatePayload,
+) => {
+  return api
+    .post<WorkoutTemplate>("/workout-templates", payload)
+    .then((res) => res.data);
 };
 
 export const updateWorkoutTemplate = (

@@ -31,8 +31,7 @@ const createInitialValues = (
 });
 
 export const EditWorkoutTemplate: React.FC = () => {
-  const templateId =
-    useRememberedTemplateId("last-template-id:template") ?? "";
+  const templateId = useRememberedTemplateId("last-template-id:template") ?? "";
 
   const {
     data: template,

@@ -4,6 +4,8 @@ import { Controller, useFormContext, useWatch } from "react-hook-form";
 import type { ExerciseType } from "api/exercise-types";
 import type { WeightUnit } from "api/workout-templates";
 
+import { AutoResizeTextarea } from "components/AutoResizeTextarea";
+
 import type { WorkoutTemplateFormValues } from "../WorkoutTemplateForm";
 
 import { Sets } from "./Sets";
@@ -127,10 +129,11 @@ export const ExerciseItem: React.FC<ExerciseItemProps> = (props) => {
       <Sets exerciseIndex={index} />
 
       <div className="mt-2">
-        <textarea
+        <AutoResizeTextarea
           className="w-full rounded border border-zinc-600 bg-transparent px-2 py-1"
           placeholder="Comment"
-          rows={2}
+          minRows={1}
+          maxRows={5}
           {...register(`exercises.${index}.comment`)}
         />
       </div>
