@@ -2,12 +2,18 @@ import {
   workoutOverviewQuerySchema,
   workoutOverviewResponseSchema,
 } from "@sport-track/contracts";
-import type { FastifyPluginAsync } from "fastify";
+import { z } from "zod";
 
-import { prisma } from "../lib/prisma.js";
+import { prisma } from "../../lib/prisma.js";
+
+import {
+  InvalidWorkoutOverviewResponsePayloadError,
+  WorkoutTemplateNotFoundError,
+} from "./errors.js";
 
 const FOUR_WEEKS_DAYS = 28;
 const DAY_MS = 24 * 60 * 60 * 1000;
+type WorkoutOverviewQuery = z.infer<typeof workoutOverviewQuerySchema>;
 
 const parseDate = (value?: string) => {
   if (!value) {
@@ -39,19 +45,8 @@ const getSetVolume = (set: {
   return set.reps * set.weight;
 };
 
-export const statsRoutes: FastifyPluginAsync = async (app) => {
-  app.get("/workout-overview", async (request, reply) => {
-    const parsedQuery = workoutOverviewQuerySchema.safeParse(request.query);
-
-    if (!parsedQuery.success) {
-      return reply.status(400).send({
-        message: "Invalid query params",
-        issues: parsedQuery.error.issues,
-      });
-    }
-
-    const query = parsedQuery.data;
-
+export class StatsService {
+  getWorkoutOverview = async (query: WorkoutOverviewQuery) => {
     const from = parseDate(query.from);
     const to = parseDate(query.to);
 
@@ -76,9 +71,7 @@ export const statsRoutes: FastifyPluginAsync = async (app) => {
     });
 
     if (!template) {
-      return reply.status(404).send({
-        message: "Workout template not found",
-      });
+      throw new WorkoutTemplateNotFoundError();
     }
 
     const sessions = await prisma.workoutSession.findMany({
@@ -313,16 +306,13 @@ export const statsRoutes: FastifyPluginAsync = async (app) => {
       workoutOverviewResponseSchema.safeParse(responsePayload);
 
     if (!parsedResponse.success) {
-      request.log.error(
-        { issues: parsedResponse.error.issues },
-        "Invalid workout overview response payload",
+      throw new InvalidWorkoutOverviewResponsePayloadError(
+        parsedResponse.error.issues,
       );
-
-      return reply.status(500).send({
-        message: "Invalid workout overview response payload",
-      });
     }
 
     return parsedResponse.data;
-  });
-};
+  };
+}
+
+export const statsService = new StatsService();

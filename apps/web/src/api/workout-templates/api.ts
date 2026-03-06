@@ -1,10 +1,14 @@
 import { api } from "../api";
 
-import type { UpsertWorkoutTemplatePayload, WorkoutTemplate } from "./types";
+import type {
+  UpsertWorkoutTemplatePayload,
+  WorkoutTemplate,
+  WorkoutTemplateListItem,
+} from "./types";
 
 export const getWorkoutTemplates = () => {
   return api
-    .get<WorkoutTemplate[]>("/workout-templates")
+    .get<WorkoutTemplateListItem[]>("/workout-templates")
     .then((res) => res.data);
 };
 
