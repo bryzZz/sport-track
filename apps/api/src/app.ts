@@ -1,11 +1,11 @@
 import cors from "@fastify/cors";
 import Fastify from "fastify";
 
-import { env } from "./env.js";
 import { exerciseTypesRoutes } from "./routes/exercise-types.js";
 import { statsRoutes } from "./routes/stats.js";
 import { workoutSessionsRoutes } from "./routes/workout-sessions.js";
 import { workoutTemplatesRoutes } from "./routes/workout-templates.js";
+import { env } from "./env.js";
 
 export const buildApp = () => {
   const app = Fastify({

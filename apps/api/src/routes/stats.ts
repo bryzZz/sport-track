@@ -1,8 +1,8 @@
-import type { FastifyPluginAsync } from "fastify";
 import {
   workoutOverviewQuerySchema,
   workoutOverviewResponseSchema,
 } from "@sport-track/contracts";
+import type { FastifyPluginAsync } from "fastify";
 
 import { prisma } from "../lib/prisma.js";
 
@@ -27,7 +27,11 @@ const formatDate = (value: Date) => value.toISOString().slice(0, 10);
 
 const roundToOneDecimal = (value: number) => Math.round(value * 10) / 10;
 
-const getSetVolume = (set: { reps: number; weight: number; isCompleted: boolean }) => {
+const getSetVolume = (set: {
+  reps: number;
+  weight: number;
+  isCompleted: boolean;
+}) => {
   if (!set.isCompleted) {
     return 0;
   }
@@ -129,19 +133,26 @@ export const statsRoutes: FastifyPluginAsync = async (app) => {
     const sessionVolumes = normalizedSessions.map((session) => ({
       performedAt: session.performedAt,
       volume: session.exercises.reduce((exerciseAcc, exercise) => {
-        return exerciseAcc + exercise.sets.reduce((setAcc, set) => setAcc + getSetVolume(set), 0);
+        return (
+          exerciseAcc +
+          exercise.sets.reduce((setAcc, set) => setAcc + getSetVolume(set), 0)
+        );
       }, 0),
     }));
 
     const sessionsCount = normalizedSessions.length;
     const lastSession = normalizedSessions[sessionsCount - 1];
-    const totalVolumeValue = sessionVolumes.reduce((acc, session) => acc + session.volume, 0);
+    const totalVolumeValue = sessionVolumes.reduce(
+      (acc, session) => acc + session.volume,
+      0,
+    );
 
     const averageRpe =
       sessionsCount === 0
         ? null
         : roundToOneDecimal(
-            normalizedSessions.reduce((acc, session) => acc + session.rpe, 0) / sessionsCount,
+            normalizedSessions.reduce((acc, session) => acc + session.rpe, 0) /
+              sessionsCount,
           );
 
     const trendEndDate = to ?? lastSession?.performedAt ?? new Date();
@@ -155,7 +166,8 @@ export const statsRoutes: FastifyPluginAsync = async (app) => {
 
     const currentPeriodVolume = sessionVolumes.reduce((acc, session) => {
       const inCurrentPeriod =
-        session.performedAt >= currentPeriodStart && session.performedAt <= trendEndDate;
+        session.performedAt >= currentPeriodStart &&
+        session.performedAt <= trendEndDate;
 
       if (!inCurrentPeriod) {
         return acc;
@@ -166,7 +178,8 @@ export const statsRoutes: FastifyPluginAsync = async (app) => {
 
     const previousPeriodVolume = sessionVolumes.reduce((acc, session) => {
       const inPreviousPeriod =
-        session.performedAt >= previousPeriodStart && session.performedAt <= previousPeriodEnd;
+        session.performedAt >= previousPeriodStart &&
+        session.performedAt <= previousPeriodEnd;
 
       if (!inPreviousPeriod) {
         return acc;
@@ -178,7 +191,11 @@ export const statsRoutes: FastifyPluginAsync = async (app) => {
     const trendDeltaPercent =
       previousPeriodVolume === 0
         ? null
-        : Math.round(((currentPeriodVolume - previousPeriodVolume) / previousPeriodVolume) * 100);
+        : Math.round(
+            ((currentPeriodVolume - previousPeriodVolume) /
+              previousPeriodVolume) *
+              100,
+          );
 
     const exercises = template.exercises.map((templateExercise) => {
       const records = normalizedSessions.map((session) => {
@@ -194,7 +211,9 @@ export const statsRoutes: FastifyPluginAsync = async (app) => {
           };
         }
 
-        const completedSets = sessionExercise.sets.filter((set) => set.isCompleted);
+        const completedSets = sessionExercise.sets.filter(
+          (set) => set.isCompleted,
+        );
 
         if (completedSets.length === 0) {
           return {
@@ -222,34 +241,37 @@ export const statsRoutes: FastifyPluginAsync = async (app) => {
         })),
       );
 
-      const bestSet = completedSets.reduce<{ reps: number; weight: number } | null>(
-        (currentBest, set) => {
-          if (!currentBest) {
-            return { reps: set.reps, weight: set.weight };
-          }
+      const bestSet = completedSets.reduce<{
+        reps: number;
+        weight: number;
+      } | null>((currentBest, set) => {
+        if (!currentBest) {
+          return { reps: set.reps, weight: set.weight };
+        }
 
-          const currentBestVolume = currentBest.reps * currentBest.weight;
+        const currentBestVolume = currentBest.reps * currentBest.weight;
 
-          if (set.volume > currentBestVolume) {
-            return { reps: set.reps, weight: set.weight };
-          }
+        if (set.volume > currentBestVolume) {
+          return { reps: set.reps, weight: set.weight };
+        }
 
-          if (set.volume === currentBestVolume && set.weight > currentBest.weight) {
-            return { reps: set.reps, weight: set.weight };
-          }
+        if (
+          set.volume === currentBestVolume &&
+          set.weight > currentBest.weight
+        ) {
+          return { reps: set.reps, weight: set.weight };
+        }
 
-          if (
-            set.volume === currentBestVolume &&
-            set.weight === currentBest.weight &&
-            set.reps > currentBest.reps
-          ) {
-            return { reps: set.reps, weight: set.weight };
-          }
+        if (
+          set.volume === currentBestVolume &&
+          set.weight === currentBest.weight &&
+          set.reps > currentBest.reps
+        ) {
+          return { reps: set.reps, weight: set.weight };
+        }
 
-          return currentBest;
-        },
-        null,
-      );
+        return currentBest;
+      }, null);
 
       return {
         id: templateExercise.id,
@@ -269,7 +291,9 @@ export const statsRoutes: FastifyPluginAsync = async (app) => {
       },
       summary: {
         sessionsCount,
-        lastSessionDate: lastSession ? formatDate(lastSession.performedAt) : null,
+        lastSessionDate: lastSession
+          ? formatDate(lastSession.performedAt)
+          : null,
         totalVolume: {
           value: totalVolumeValue,
           unit: "kg" as const,
@@ -285,7 +309,8 @@ export const statsRoutes: FastifyPluginAsync = async (app) => {
       exercises,
     };
 
-    const parsedResponse = workoutOverviewResponseSchema.safeParse(responsePayload);
+    const parsedResponse =
+      workoutOverviewResponseSchema.safeParse(responsePayload);
 
     if (!parsedResponse.success) {
       request.log.error(

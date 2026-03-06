@@ -8,7 +8,7 @@
     "build": "pnpm --filter @sport-track/contracts build && tsc -p tsconfig.build.json",
     "start": "node dist/src/server.js",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "lint": "pnpm run typecheck",
+    "lint": "eslint .",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "tsx prisma/seed.ts",
@@ -23,9 +23,16 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.3",
     "@types/node": "^24.10.1",
+    "eslint": "^9.39.3",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "globals": "^16.5.0",
     "prisma": "^6.6.0",
     "tsx": "^4.20.5",
-    "typescript": "~5.9.3"
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.56.1"
   }
 }

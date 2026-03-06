@@ -106,7 +106,7 @@ const workoutTemplatesSeed: TemplateSeed[] = [
       },
       {
         exerciseName: "Smith Machine JM Press",
-        comment: '3 высота скамейки',
+        comment: "3 высота скамейки",
         sets: [
           { reps: 12, weight: 20 },
           { reps: 12, weight: 20 },
@@ -305,14 +305,15 @@ const seedTemplates = async (exerciseTypeIdByName: Map<string, string>) => {
         continue;
       }
 
-      const createdTemplateExercise = await prisma.workoutTemplateExercise.create({
-        data: {
-          templateId: createdTemplate.id,
-          exerciseTypeId,
-          orderIndex: exerciseIndex,
-          comment: exercise.comment,
-        },
-      });
+      const createdTemplateExercise =
+        await prisma.workoutTemplateExercise.create({
+          data: {
+            templateId: createdTemplate.id,
+            exerciseTypeId,
+            orderIndex: exerciseIndex,
+            comment: exercise.comment,
+          },
+        });
 
       templateExerciseIdByKey.set(
         `${template.name}:${exercise.exerciseName}`,
@@ -359,7 +360,10 @@ const seedWorkoutSessions = async (
       },
     });
 
-    for (const [exerciseIndex, exercise] of workoutSession.exercises.entries()) {
+    for (const [
+      exerciseIndex,
+      exercise,
+    ] of workoutSession.exercises.entries()) {
       const exerciseTypeId = exerciseTypeIdByName.get(exercise.exerciseName);
       const templateExerciseId = templateExerciseIdByKey.get(
         `${workoutSession.templateName}:${exercise.exerciseName}`,
@@ -369,14 +373,16 @@ const seedWorkoutSessions = async (
         continue;
       }
 
-      const createdSessionExercise = await prisma.workoutSessionExercise.create({
-        data: {
-          sessionId: createdSession.id,
-          exerciseTypeId,
-          templateExerciseId,
-          orderIndex: exerciseIndex,
+      const createdSessionExercise = await prisma.workoutSessionExercise.create(
+        {
+          data: {
+            sessionId: createdSession.id,
+            exerciseTypeId,
+            templateExerciseId,
+            orderIndex: exerciseIndex,
+          },
         },
-      });
+      );
 
       for (const [setIndex, set] of exercise.sets.entries()) {
         await prisma.workoutSessionSet.create({
@@ -398,9 +404,8 @@ const seed = async () => {
   await clearWorkoutData();
 
   const exerciseTypeIdByName = await seedExerciseTypes();
-  const { templateIdByName, templateExerciseIdByKey } = await seedTemplates(
-    exerciseTypeIdByName,
-  );
+  const { templateIdByName, templateExerciseIdByKey } =
+    await seedTemplates(exerciseTypeIdByName);
 
   await seedWorkoutSessions(
     exerciseTypeIdByName,
