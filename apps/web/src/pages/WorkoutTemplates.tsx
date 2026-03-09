@@ -1,12 +1,14 @@
 import React from "react";
 import { Link } from "react-router";
 
+import EditActionIcon from "assets/icons/action-edit.svg?react";
+import PerformActionIcon from "assets/icons/action-perform.svg?react";
+import StatsActionIcon from "assets/icons/action-stats.svg?react";
+
 import { useGetWorkoutTemplates } from "../api/workout-templates";
 
 export const WorkoutTemplates: React.FC = () => {
   const { data: templates = [], isLoading, isError } = useGetWorkoutTemplates();
-  const baseButtonClassName =
-    "w-full cursor-pointer rounded border px-4 py-2 text-left sm:w-auto sm:px-6 sm:text-center";
 
   if (isLoading) {
     return <p>Loading templates...</p>;
@@ -18,53 +20,46 @@ export const WorkoutTemplates: React.FC = () => {
 
   return (
     <div>
-      <h1 className="mb-6 text-3xl sm:text-4xl">Workout Templates</h1>
+      <h1 className="mb-6 text-3xl">Workout Templates</h1>
 
       <div className="flex flex-col gap-3">
         {templates.map((template) => (
-          <div
-            key={template.id}
-            className="flex w-full flex-col gap-3 rounded-lg border px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6"
-          >
-            <h2 className="text-xl wrap-break-word sm:text-2xl">
-              {template.name}
-            </h2>
+          <div key={template.id} className="rounded-lg border px-4 py-3">
+            <h2 className="mb-4 text-2xl wrap-break-word">{template.name}</h2>
 
-            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+            <div className="flex items-center justify-end gap-2">
               <Link
-                className="w-full sm:w-auto"
-                to={`/templates/edit?templateId=${encodeURIComponent(template.id)}`}
-              >
-                <button className={baseButtonClassName} type="button">
-                  Edit
-                </button>
-              </Link>
-
-              <Link
-                className="w-full sm:w-auto"
-                to={`/workout/perform?templateId=${template.id}`}
-              >
-                <button className={baseButtonClassName} type="button">
-                  Perform
-                </button>
-              </Link>
-
-              <Link
-                className="w-full sm:w-auto"
+                className="flex items-center justify-center rounded border p-2.5 text-neutral-700"
+                title="Stats"
                 to={`/stats?templateId=${template.id}`}
               >
-                <button className={baseButtonClassName} type="button">
-                  Stats
-                </button>
+                <StatsActionIcon className="size-5" />
+              </Link>
+
+              <Link
+                className="flex items-center justify-center rounded border p-2.5 text-neutral-700"
+                title="Edit"
+                to={`/templates/edit?templateId=${template.id}`}
+              >
+                <EditActionIcon className="size-5" />
+              </Link>
+
+              <Link
+                className="flex items-center justify-center rounded border p-2.5 text-neutral-700"
+                title="Perform"
+                to={`/workout/perform?templateId=${template.id}`}
+              >
+                <PerformActionIcon className="size-5" />
               </Link>
             </div>
           </div>
         ))}
 
-        <Link className="w-full sm:w-auto" to="/templates/create">
-          <button className={baseButtonClassName} type="button">
-            New Template
-          </button>
+        <Link
+          className="rounded border p-2.5 text-center"
+          to="/templates/create"
+        >
+          New Template
         </Link>
       </div>
     </div>
