@@ -12,7 +12,7 @@ interface SetsProps {
 export const Sets: React.FC<SetsProps> = (props) => {
   const { exerciseIndex } = props;
 
-  const { control } = useFormContext<WorkoutTemplateFormValues>();
+  const { control, getValues } = useFormContext<WorkoutTemplateFormValues>();
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -20,7 +20,8 @@ export const Sets: React.FC<SetsProps> = (props) => {
   });
 
   const handleAddSet = () => {
-    const lastSet = fields[fields.length - 1];
+    const sets = getValues(`exercises.${exerciseIndex}.sets` as const);
+    const lastSet = sets[sets.length - 1];
 
     append({
       reps: lastSet?.reps ?? 10,

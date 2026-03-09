@@ -21,7 +21,7 @@ export const Sets: React.FC<SetsProps> = ({
   planSets,
   weightUnit,
 }) => {
-  const { control } = useFormContext<WorkoutPerformFormValues>();
+  const { control, getValues } = useFormContext<WorkoutPerformFormValues>();
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -29,7 +29,8 @@ export const Sets: React.FC<SetsProps> = ({
   });
 
   const handleAddSet = () => {
-    const lastSet = fields[fields.length - 1];
+    const sets = getValues(`exercises.${exerciseIndex}.sets` as const);
+    const lastSet = sets[sets.length - 1];
 
     const nextSet = {
       reps: lastSet?.reps ?? 0,
